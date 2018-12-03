@@ -1,0 +1,41 @@
+{
+    "gerrit_url": "https://gerrit.example.com",
+    "user": "username",
+    "api_token": "v8rz0vMexamplexampleexampleWk6YUoLiRw",
+    "ci_user": "ci_bot",
+    "tmp_dir": "/tmp/gerrit",
+    "jenkins_token": "616aabababababababababafdfdfdf0f64",
+    "jenkins_url": "https://jenkins.example.com:8443",
+    "predefined_search": {
+        "master" : "project:<project> status:open branch:master -owner:self"
+    },
+
+    "palette": {
+        "commit_sha": ["h3", "h8", "h0"],
+        "comment_header": ["h4", "h8", "h0"],
+        "insertion": ["h2", "h8", "h0"],
+        "deletion": ["h1", "h8", "h0"],
+        "filelist_stateD": ["h1", "h8", "h0"],
+        "filelist_stateA": ["h2", "h8", "h0"],
+        "filelist_stateM": ["h3", "h8", "h0"],
+        "filelist_stateR": ["h5", "h8", "h0"],
+        "filelist_comment_count": ["h13", "h8", "h0"],
+        "bad_label": ["h1", "h8", "h0"],
+        "good_label": ["h2", "h8", "h0"],
+        "neutral_label": ["", "h8", "h0"],
+        "change_list_owner": ["h4", "h8", "h0"],
+        "reviewer_name": ["h4", "h8", "h0"],
+        "job_FAILURE": ["h1", "h8", "h0"],
+        "job_SUCCESS": ["h2", "h8", "h0"],
+        "job_ABORTED": ["h11", "h8", "h0"],
+        "job_STARTED": ["h7", "h8", "h0"],
+        "job_UNSTABLE": ["h3", "h8", "h0"],
+        "status_pending": ["h7", "h8", "h0"],
+        "status_submittable": ["h2", "h8", "h0"],
+        "status_conflict": ["h1", "h8", "h0"],
+        "status_abandoned": ["h5", "h8", "h0"],
+        "status_merged": ["h3", "h8", "h0"],
+        "line": ["", "h8", "h0"],
+        "button": ["h7", "h8", "h10"]
+    }
+}

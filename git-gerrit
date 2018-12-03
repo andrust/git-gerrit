@@ -1,0 +1,16 @@
+#!/bin/python -B
+# -*- coding: utf-8 -*-
+
+import json
+import os
+
+from GerritTUI import GerritTUI
+
+if __name__ == '__main__':
+    rcpath = os.path.join(os.path.expanduser('~'), '.gerritrc.json')
+    cfg = None
+    with open(rcpath, 'r') as f:
+        cfg = json.load(f)
+
+    GerritTUI(cfg).start()
+    os.system('clear')

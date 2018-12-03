@@ -1,0 +1,43 @@
+set nocompatible
+set mouse=
+
+syntax enable
+colorscheme elflord
+" set t_Co=256
+set background=dark
+
+set backspace=indent,eol,start
+
+set noerrorbells
+set novisualbell
+set t_vb=
+
+set number
+set ruler
+set autoread
+set ignorecase
+set smartcase
+
+set hlsearch
+set incsearch
+set showmatch
+" set colorcolumn=80
+set nobackup
+set nowb
+set noswapfile
+set scrolloff=3
+
+set smarttab
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set noautoindent
+set smartindent
+
+nnoremap q :qa!<CR>
+vnoremap q :qa!<CR>
+
+highlight DiffAdd    term=bold         ctermbg=darkgreen    ctermfg=white    cterm=bold
+highlight DiffText   term=reverse,bold ctermbg=darkyellow   ctermfg=black    cterm=bold
+highlight DiffChange term=bold         ctermbg=black        ctermfg=white    cterm=bold
+highlight DiffDelete term=none         ctermbg=darkred      ctermfg=white    cterm=none

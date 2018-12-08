@@ -112,23 +112,17 @@ class FileList(urwid.WidgetWrap):
                 self.base_select.base_widget.set_label("revision " + str(value))
 
     def dump_comments(self, fname):
-        comments_for_patch = []
-        if fname in self.comments.keys():
-            for c in self.comments[fname]:
-                if c["patch_set"] == self.patchset:
-                    comments_for_patch.append(c)
-        comments_file = os.path.join(self.main.cfg['tmp_dir'], "comments")
-        with open(comments_file, "w") as f:
-            f.write(json.dumps(comments_for_patch))
+        with open(fname, "w") as f:
+            f.write(json.dumps(self.comments))
 
     def diff_popup(self, sources):
         source, old_path = sources
         tmpdir = self.main.cfg['tmp_dir']
-        gerrit_fname = os.path.join(tmpdir, 'GERRIT_' + os.path.basename(source))
+        gerrit_fname = os.path.join(tmpdir, 'ps%d_%s' % (self.patchset, os.path.basename(source)))
         if old_path:
-            base_fname = os.path.join(tmpdir, 'BASE_' + os.path.basename(old_path))
+            base_fname = os.path.join(tmpdir, 'ps%s_%s' % (str(self.diff_against), os.path.basename(old_path)))
         else:
-            base_fname = os.path.join(tmpdir, 'BASE_' + os.path.basename(source))
+            base_fname = os.path.join(tmpdir, 'ps%s_%s' % (str(self.diff_against), os.path.basename(source)))
 
         base_sha = self.sha + '~1'
         if self.diff_against != "base":
@@ -145,7 +139,8 @@ class FileList(urwid.WidgetWrap):
         else:
             self.git.get_file(base_sha, source, base_fname, "NEW_FILE")
 
-        self.dump_comments(source)
+        comments_file = os.path.join(self.main.cfg['tmp_dir'], "comments")
+        self.dump_comments(comments_file)
         os.system("tmux new-window -nsinter '" + ' '.join(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]) + "'")
         return
         term = urwid.Terminal(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname], main_loop=self.main.mainloop, escape_sequence='meta a')

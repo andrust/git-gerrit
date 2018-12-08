@@ -41,3 +41,47 @@ highlight DiffAdd    term=bold         ctermbg=darkgreen    ctermfg=white    cte
 highlight DiffText   term=reverse,bold ctermbg=darkyellow   ctermfg=black    cterm=bold
 highlight DiffChange term=bold         ctermbg=black        ctermfg=white    cterm=bold
 highlight DiffDelete term=none         ctermbg=darkred      ctermfg=white    cterm=none
+
+" Plugin
+if !has("python")
+    echo "vim has to be compiled with +python to run this"
+    finish
+endif
+
+if exists('g:plugin_plugin_loaded')
+    echo "already loaded"
+    finish
+endif
+
+let g:plugin_plugin_loaded = 1
+let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+
+python << EOF
+import sys
+import vim
+sys.path.insert(0, vim.eval('s:plugin_root_dir'))
+import Plugin
+EOF
+
+function! CheckCurrentPos()
+    python Plugin.check_current_pos()
+endfunction
+
+autocmd CursorMoved * call CheckCurrentPos()
+
+function! ProposeDraft()
+    python Plugin.propose_draft()
+endfunction 
+
+command! -nargs=0 ProposeDraft call ProposeDraft()
+nnoremap c :ProposeDraft<cr> 
+
+function! SaveDraft()
+    python Plugin.save_draft()
+endfunction
+command! -nargs=0 SaveDraft call SaveDraft()
+
+function! Dispose()
+    python Plugin.dispose()
+endfunction
+autocmd VimLeavePre * call Dispose()

@@ -141,9 +141,10 @@ class FileList(urwid.WidgetWrap):
 
         comments_file = os.path.join(self.main.cfg['tmp_dir'], "comments")
         self.dump_comments(comments_file)
-        os.system("tmux new-window -nsinter '" + ' '.join(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]) + "'")
-        return
-        term = urwid.Terminal(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname], main_loop=self.main.mainloop, escape_sequence='meta a')
+        if 'TMUX' in os.environ:
+            os.system("tmux new-window -nsinter '" + ' '.join(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]) + "'")
+        else:
+            term = urwid.Terminal(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname], main_loop=self.main.mainloop, escape_sequence='meta a')
         term.change_focus(True)
         urwid.connect_signal(term, "closed", self.main.close_popup)
         self.main.open_popup(urwid.LineBox(term), ("relative", 90), ("relative", 90))

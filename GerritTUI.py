@@ -1,4 +1,5 @@
 import urwid
+import os
 
 from Gerrit import Gerrit
 from SelectableListItem import SelectableListItem
@@ -11,6 +12,11 @@ class GerritTUI(object):
 
         urwid.set_encoding('utf8')
         self.cfg = cfg
+
+        tmp_dir = cfg['tmp_dir']
+        if not os.path.exists(tmp_dir):
+            os.makedirs(tmp_dir)
+
         self.gerrit = Gerrit(cfg['gerrit_url'] + '/a', cfg['user'], cfg['api_token'], self.set_status)
 
         self.register_signals()

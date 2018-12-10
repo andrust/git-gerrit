@@ -39,6 +39,7 @@ class CommentHandler(object):
         self.__drafts = {}
         self.__last_draft = None
         self.__last_row = None
+        self.__last_split = None
 
         self.setup_vim()
         self.load_comments(json.load(open(os.path.join(self.__tmp_dir, 'comments'))))
@@ -61,8 +62,12 @@ class CommentHandler(object):
 
     def load_comments(self, comments_json):
         for file,comments in comments_json.iteritems():
+            file = os.path.basename(file)
             for comment in comments:
                 filename = 'ps%d_%s' % (comment['patch_set'], file)
+
+                if 'line' not in comment.iterkeys():
+                    comment['line'] = 1
 
                 if self.buffer_exists(filename):
                     vim.command('sign place %d line=%d name=%s file=%s' % (CommentHandler.sign_id(), comment['line'], CommentHandler.COMMENT_SIGN, self.get_buffer(filename)))
@@ -74,6 +79,7 @@ class CommentHandler(object):
     def open_split(self, type):
         vim.command('10new')
         vim.command('set filetype=%s' % type)
+        self.__last_split = vim.current.buffer.number
 
     def check_position_in_dict(self, filename, row, comments_dict, sign):
         fd = comments_dict.get(filename, None)
@@ -82,10 +88,17 @@ class CommentHandler(object):
                 if c.row == row:
                     self.open_split(sign)
                     vim.current.buffer[0] = c.message
+                    vim.command('wincmd p')
+
+
 
     def check_position(self, file_path, row):
         if not file_path:
             return
+
+        if row != self.__last_row and self.__last_split is not None:
+            vim.command('bdelete! %i' % (self.__last_split))
+            self.__last_split = None
 
         filename = os.path.basename(file_path)
         self.check_position_in_dict(filename, row, self.__comments,
@@ -107,6 +120,7 @@ class CommentHandler(object):
 
             self.__drafts[self.__last_draft.filename] = self.__last_draft
             self.__last_draft = None
+            self.__last_split = None
 
     def dispose(self):
         # TODO: send drafts to gerrit

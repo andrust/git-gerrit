@@ -87,7 +87,7 @@ class CommentHandler(object):
             for c in fd.comments:
                 if c.row == row:
                     self.open_split(sign)
-                    vim.current.buffer[0] = c.message
+                    vim.current.buffer[:] = c.message.splitlines()
                     vim.command('wincmd p')
 
 

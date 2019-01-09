@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import urwid
+import os
+import shutil
 
 from FileList import FileList
 from Comments import Comments
@@ -25,6 +27,7 @@ class ChangeView(urwid.WidgetWrap):
         self.change_id = change_id
         self.main = gerrittui
         super(ChangeView, self).__init__(urwid.Filler(urwid.Text("Loading...")))
+        self.clear_tempdir()
 
         # State
         self.change = self.main.gerrit.change_details(self.change_id)
@@ -42,6 +45,16 @@ class ChangeView(urwid.WidgetWrap):
         self.ci_jobs = CIJobs(self.main, self.change, self.active_revision_number)
 
         self.setup_layout()
+
+    def clear_tempdir(self):
+        tmpdir = self.main.cfg['tmp_dir']
+        for f in os.listdir(tmpdir):
+            fpath = os.path.join(tmpdir, f)
+            if os.path.isdir(fpath):
+                shutil.rmtree(fpath)
+            else:
+                os.unlink(fpath)
+
 
     def setup_layout(self):
         top_row = urwid.Columns([self.commit_msg, self.change_info, self.reviewers])

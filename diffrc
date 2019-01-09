@@ -33,6 +33,7 @@ set shiftwidth=4
 set tabstop=4
 set noautoindent
 set smartindent
+set diffexpr="diff --minimal"
 
 nnoremap q :qa!<CR>
 vnoremap q :qa!<CR>
@@ -72,16 +73,23 @@ autocmd CursorMoved * call CheckCurrentPos()
 function! ProposeDraft()
     python Plugin.propose_draft()
 endfunction 
-
 command! -nargs=0 ProposeDraft call ProposeDraft()
-nnoremap c :ProposeDraft<cr> 
+nnoremap c :ProposeDraft<cr>
 
 function! SaveDraft()
     python Plugin.save_draft()
 endfunction
 command! -nargs=0 SaveDraft call SaveDraft()
+nnoremap s :SaveDraft<cr>
+
+function! DiscardDraft()
+    python Plugin.discard_draft()
+endfunction
+command! -nargs=0 DiscardDraft call DiscardDraft()
+nnoremap D :DiscardDraft<cr>
 
 function! Dispose()
     python Plugin.dispose()
 endfunction
 autocmd VimLeavePre * call Dispose()
+

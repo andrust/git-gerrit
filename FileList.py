@@ -28,7 +28,7 @@ class FileList(urwid.WidgetWrap):
         diff_against_selector = urwid.Filler(urwid.Columns([(14, txt), (15, self.base_select)]))
         flist = []
         for f, desc in sorted(change['revisions'][self.sha]['files'].iteritems()):
-            old_source = None
+            old_source = f
             fname = f
             state = "M"
             if "status" in desc.keys():
@@ -116,16 +116,22 @@ class FileList(urwid.WidgetWrap):
             f.write(json.dumps(self.comments))
 
     def diff_popup(self, sources):
-        source, old_path = sources
         tmpdir = self.main.cfg['tmp_dir']
-        gerrit_fname = os.path.join(tmpdir, 'ps%d_%s' % (self.patchset, os.path.basename(source)))
-        if old_path:
-            base_fname = os.path.join(tmpdir, 'ps%s_%s' % (str(self.diff_against), os.path.basename(old_path)))
-        else:
-            base_fname = os.path.join(tmpdir, 'ps%s_%s' % (str(self.diff_against), os.path.basename(source)))
+        repo_path_gerrit, repo_path_base = sources
 
-        base_sha = self.sha + '~1'
-        if self.diff_against != "base":
+        if repo_path_base != repo_path_gerrit:
+            is_rename = True
+        else:
+            is_rename = False
+
+        # set filenames
+        gerrit_fname = os.path.join(tmpdir, 'ps%d_%s' % (self.patchset, os.path.basename(repo_path_gerrit)))
+        base_fname = os.path.join(tmpdir, 'ps%s_%s' % (str(self.diff_against), os.path.basename(repo_path_base)))
+
+        # Fetch refspec, and base refspec
+        if self.diff_against == "base":
+            base_sha = self.sha + '~1'
+        else:
             for bsha, desc in self.change["revisions"].iteritems():
                 if desc['_number'] == self.diff_against:
                     base_sha = bsha
@@ -133,14 +139,28 @@ class FileList(urwid.WidgetWrap):
             self.git.fetch(self.change['revisions'][base_sha]['ref'])
 
         self.git.fetch(self.change['revisions'][self.sha]['ref'])
-        self.git.get_file(self.sha, source, gerrit_fname, "DELETED_FILE")
-        if old_path:
-            self.git.get_file(base_sha, old_path, base_fname, "NEW_FILE")
-        else:
-            self.git.get_file(base_sha, source, base_fname, "NEW_FILE")
 
-        comments_file = os.path.join(self.main.cfg['tmp_dir'], "comments")
-        self.dump_comments(comments_file)
+
+        # Dump contents of gerrit version
+        self.git.get_file(self.sha, repo_path_gerrit, gerrit_fname, "DELETED_FILE")
+
+        # Dump contents of base version
+        self.git.get_file(base_sha, repo_path_base, base_fname, "NEW_FILE")
+
+
+        # Dump Comments
+        self.dump_comments(os.path.join(self.main.cfg['tmp_dir'], "comments.json"))
+
+        # Dump diff Properties
+        diff_properties = {
+                "before" : { "patch_set" : self.diff_against, "fname" : base_fname, "repopath" : repo_path_base },
+                "after": { "patch_set" : str(self.patchset), "fname" : gerrit_fname, "repopath" : repo_path_gerrit }
+        }
+        with open(os.path.join(tmpdir, "diff_properties.json"), "w") as dp:
+            json.dump(diff_properties, dp)
+
+
+        # Open popup
         if 'TMUX' in os.environ:
             os.system("tmux new-window -nsinter '" + ' '.join(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]) + "'")
         else:

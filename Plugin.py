@@ -21,15 +21,30 @@ class FileDescriptor(object):
         return self.__buffer
 
     def add_comment(self, message, row, author, date):
-        self.__comments.append(Comment(message, row, author, date, CommentHandler.COMMENT_SIGN, self.__buffer))
+        c = Comment(message, row, author, date, CommentHandler.COMMENT_SIGN, self.__buffer)
+        self.__comments.append(c)
+        vim.command('sign place %d line=%d name=%s file=%s' % (c.id, row, CommentHandler.COMMENT_SIGN, self.__buffer))
 
     def add_draft(self, message, row):
         c = Comment(message, row, "", "", CommentHandler.DRAFT_SIGN, self.__buffer)
         self.__drafts.append(c)
+        vim.command('sign place %d line=%d name=%s file=%s' % (c.id, row, CommentHandler.DRAFT_SIGN, self.__buffer))
         return c
 
-    def delete_draft(self, row):
-        self.__drafts[:] = [x for x in self.__drafts if x.row != row]
+    def delete_draft(self, in_buffer):
+        to_remove = None
+        for c in self.__drafts:
+            if c.visible_in_buffer == in_buffer:
+                to_remove = c
+                break
+
+        self.__drafts[:] = [x for x in self.__drafts if x.visible_in_buffer != in_buffer]
+
+        if to_remove is not None:
+            for c in self.__drafts:
+                if c.row == to_remove.row:
+                    break
+            vim.command('sign unplace %d' % (to_remove.id))
 
 class Comment(object):
     def __init__(self, message, row, author, date, comment_type, commented_buffer):
@@ -40,6 +55,7 @@ class Comment(object):
         self.visible_in_buffer = None
         self.type = comment_type
         self.commented_buffer = commented_buffer
+        self.id = CommentHandler.sign_id()
 
     def comment_content(self):
         content = ["%s on %s wrote:" % (self.author, self.date), ""]
@@ -113,7 +129,6 @@ class CommentHandler(object):
                     continue
 
                 commented_descriptor.add_draft(comment['message'], comment['line'])
-                vim.command('sign place %d line=%d name=%s file=%s' % (CommentHandler.sign_id(), comment['line'], CommentHandler.DRAFT_SIGN, commented_buffer))
 
     def load_comments(self, comments_json):
         for file_path_in_repo, comments in comments_json.iteritems():
@@ -131,7 +146,6 @@ class CommentHandler(object):
                     continue
 
                 commented_descriptor.add_comment(comment['message'], comment['line'], comment['author']['name'], comment['updated'][0:16])
-                vim.command('sign place %d line=%d name=%s file=%s' % (CommentHandler.sign_id(), comment['line'], CommentHandler.COMMENT_SIGN, commented_buffer))
 
     def open_comment(self, comment):
         comment.visible_in_buffer = self.open_split(CommentHandler.COMMENT_SIGN, comment.comment_content(), has_focus=False)
@@ -194,7 +208,6 @@ class CommentHandler(object):
             comment = self.__after.add_draft("", row)
 
         self.open_draft(comment, has_focus=True)
-        vim.command('sign place %d line=%d name=%s file=%s' % (CommentHandler.sign_id(), comment.row, CommentHandler.DRAFT_SIGN, comment.commented_buffer))
 
 
     def save_draft(self):
@@ -217,6 +230,9 @@ class CommentHandler(object):
         if len(self.__before.drafts) or len(self.__after.drafts):
             drafts[self.__diff_properties['before']['repopath']] = []
             drafts[self.__diff_properties['after']['repopath']] = []
+        else:
+            drafts.pop(self.__diff_properties['before']['repopath'], None)
+            drafts.pop(self.__diff_properties['after']['repopath'], None)
 
         for d in self.__before.drafts:
             drafts[self.__diff_properties['before']['repopath']].append(d.draft_serialize(self.__diff_properties['before']['patch_set']))
@@ -229,6 +245,10 @@ class CommentHandler(object):
 
 
     def discard_draft(self):
+        bufnr = vim.current.buffer.number
+        self.__before.delete_draft(bufnr)
+        self.__after.delete_draft(bufnr)
+
         pass
 
 def get_config():

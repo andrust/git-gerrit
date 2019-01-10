@@ -9,6 +9,7 @@ class ManageReviewersAction(urwid.WidgetWrap):
         self.cview = chageview
         self.reviewers_to_add = []
         self.reviewers_to_remove = []
+        self.reviewers_proposed = urwid.SimpleListWalker([])
         super(ManageReviewersAction, self).__init__(Button("Set Reviewers", "button", self.open_popup))
 
     def apply_reviewers(self, w):
@@ -19,6 +20,7 @@ class ManageReviewersAction(urwid.WidgetWrap):
         self.reviewers_to_add = []
         self.reviewers_to_remove = []
         self.cview.main.close_popup()
+        self.reviewers_proposed[:] = []
         self.cview.refresh()
 
     def set_reviewers_to_add(self, w, editor):
@@ -26,6 +28,7 @@ class ManageReviewersAction(urwid.WidgetWrap):
             acc = self.cview.main.gerrit.accounts(editor.edit_text)
             self.reviewers_to_add.append(acc["_account_id"])
             editor.edit_text = ""
+            self.reviewers_proposed.append(urwid.Text(acc["username"]))
         except Exception:
             editor.edit_text = "Not found"
             editor.edit_pos = len(editor.edit_text)
@@ -49,6 +52,9 @@ class ManageReviewersAction(urwid.WidgetWrap):
         apply_button = urwid.Filler(urwid.Padding(urwid.Button("Apply", self.apply_reviewers), 'center', 10))
         add_button = urwid.Filler(urwid.Padding(urwid.Button("Add", self.set_reviewers_to_add, editor), 'center', 10))
 
-        add_row = urwid.Columns([editor_box, add_button])
-        pile = urwid.Pile([(3, add_row), urwid.ListBox(removable_items), (1, apply_button)])
+        add_row = urwid.Columns([editor_box, (8, add_button), (10, apply_button)])
+
+        reviewers_column = urwid.Columns([urwid.ListBox(removable_items), urwid.ListBox(self.reviewers_proposed)])
+
+        pile = urwid.Pile([(3, add_row), reviewers_column])
         self.cview.main.open_popup(urwid.LineBox(pile), 15, 60)

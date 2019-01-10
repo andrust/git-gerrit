@@ -22,6 +22,7 @@ class FileList(urwid.WidgetWrap):
         self.sha = selected_revision_sha
         self.comments = self.main.gerrit.comments(change['id'])
         self.patchset = change["revisions"][self.sha]["_number"]
+        self.load_drafts()
 
         txt = urwid.Text("Diff against:")
         self.base_select = Button("base       ", "button", self.diff_against_popup)
@@ -60,12 +61,38 @@ class FileList(urwid.WidgetWrap):
                 comments_text = urwid.Text("")
             line_contents.append((3, urwid.AttrMap(comments_text, "filelist_comment_count")))
 
+            drafts = self.get_draft_count(fname)
+            if drafts is not None:
+                drafts_text = urwid.Text("D" + str(drafts))
+            else:
+                drafts_text = urwid.Text("")
+            line_contents.append((3, urwid.AttrMap(drafts_text, "filelist_draft_count")))
+
             flist.append(urwid.Columns(line_contents))
 
         listwalker = urwid.SimpleFocusListWalker(flist)
         urwid.connect_signal(listwalker, "modified", self.set_focus_colors, listwalker)
         layout = urwid.Pile([(1, diff_against_selector), urwid.ListBox(listwalker)])
         self._w = layout
+
+    def load_drafts(self):
+        try:
+            with open(os.path.join(self.main.cfg['tmp_dir'], "drafts.json")) as f:
+                self.drafts = json.load(f)
+        except Exception:
+            self.drafts = {}
+
+    def get_draft_count(self, fname):
+        drafts_for_patch = []
+        if fname in self.drafts.keys():
+            for c in self.drafts[fname]:
+                if c["patch_set"] == str(self.patchset):
+                    drafts_for_patch.append(c)
+
+        if len(drafts_for_patch) > 0:
+            return len(drafts_for_patch)
+        else:
+            return None
 
     def get_comment_count(self, fname):
         comments_for_patch = []

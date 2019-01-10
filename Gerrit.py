@@ -60,7 +60,7 @@ class Gerrit(object):
         self.status_callback("Loaded")
         return str(resp.status_code) + resp.text
 
-    def post_comment(self, change_id, revision, comment):
+    def post_comment(self, change_id, revision, comment, file_comments=None):
         self.status_callback("Loading")
         u = self.url
         u += '/changes/'
@@ -68,7 +68,10 @@ class Gerrit(object):
         u += '/revisions/'
         u += revision
         u += '/review/'
-        req = json.dumps({"message": comment})
+        review_data = {"message": comment}
+        if file_comments is not None:
+            review_data["comments"] = file_comments
+        req = json.dumps(review_data)
         requests.post(u, auth=self.auth_token, data=req, headers={"Content-Type": 'application/json'})
         self.status_callback("Loaded")
 

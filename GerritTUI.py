@@ -45,6 +45,7 @@ class GerritTUI(object):
             "filelist_stateM",
             "filelist_stateR",
             "filelist_comment_count",
+            "filelist_draft_count",
             "bad_label",
             "good_label",
             "neutral_label",

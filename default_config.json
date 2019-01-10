@@ -20,6 +20,7 @@
         "filelist_stateM": ["h3", "h8", "h0"],
         "filelist_stateR": ["h5", "h8", "h0"],
         "filelist_comment_count": ["h13", "h8", "h0"],
+        "filelist_draft_count": ["h3", "h8", "h0"],
         "bad_label": ["h1", "h8", "h0"],
         "good_label": ["h2", "h8", "h0"],
         "neutral_label": ["", "h8", "h0"],

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import urwid
+import os
+import json
 
 from Button import Button
 
@@ -10,7 +12,32 @@ class CommentAction(urwid.WidgetWrap):
         self.editor = urwid.Edit('', edit_text="", multiline=True)
         super(CommentAction, self).__init__(Button("Comment", "button", self.open_popup))
 
+    def load_drafts(self):
+        try:
+            draft_file = os.path.join(self.cview.main.cfg['tmp_dir'], "drafts.json")
+            with open(draft_file, "r") as f:
+                drafts = json.load(f)
+                comments_for_revision = {}
+                for path, comments in drafts.iteritems():
+                    comments_for_path = []
+                    for c in comments:
+                        if c['patch_set'] == str(self.cview.active_revision_number):
+                            comments_for_path.append({"line" : c["line"], "message": c["message"]})
+                        elif c['patch_set'] == "base":
+                            comments_for_path.append({"line" : c["line"], "message": c["message"], "side": "PARENT"})
+
+                    comments_for_revision[path] = comments_for_path
+                if len(comments_for_revision.keys()) == 0:
+                    return None
+                else:
+                    return comments_for_revision
+
+        except Exception:
+            return None
+
+
     def open_popup(self, w):
+        self.file_comments = self.load_drafts()
         txt = urwid.Filler(urwid.Text('Enter Comment'))
         editor_box = urwid.LineBox(urwid.Filler(self.editor), tlcorner=u'·', tline=u'·', lline=u'·', trcorner=u'·', blcorner=u'·', rline=u'·', bline=u'·', brcorner=u'·')
         post = urwid.Filler(urwid.Padding(urwid.Button("Post", self.post_comment), 'center', 8))
@@ -23,7 +50,7 @@ class CommentAction(urwid.WidgetWrap):
         self.message = value
 
     def post_comment(self, w):
-        self.cview.main.gerrit.post_comment(self.cview.change['id'], self.cview.active_revision_sha, self.editor.edit_text)
+        self.cview.main.gerrit.post_comment(self.cview.change['id'], self.cview.active_revision_sha, self.editor.edit_text, self.file_comments)
         self.editor.edit_text = ""
         self.editor.edit_pos = 0
         self.cview.main.close_popup()

@@ -93,3 +93,14 @@ function! Dispose()
 endfunction
 autocmd VimLeavePre * call Dispose()
 
+function! NextComment()
+    python Plugin.next_comment()
+endfunction
+command! -nargs=0 NextComment call NextComment()
+nnoremap <c-n> :NextComment<cr>
+
+function! PrevComment()
+    python Plugin.prev_comment()
+endfunction
+command! -nargs=0 PrevComment call PrevComment()
+nnoremap <c-p> :PrevComment<cr>

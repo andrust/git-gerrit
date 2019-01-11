@@ -249,7 +249,39 @@ class CommentHandler(object):
         self.__before.delete_draft(bufnr)
         self.__after.delete_draft(bufnr)
 
-        pass
+    def next_comment_in_buffer(self, buf, row):
+        next_row = len(vim.current.buffer)
+        for c in buf.comments:
+            if c.row < next_row and c.row > row:
+                next_row = c.row
+        for c in buf.drafts:
+            if c.row < next_row and c.row > row:
+                next_row = c.row
+        vim.current.window.cursor = (next_row, 1)
+        vim.command("normal! zz")
+
+    def prev_comment_in_buffer(self, buf, row):
+        next_row = 1
+        for c in buf.comments:
+            if c.row > next_row and c.row < row:
+                next_row = c.row
+        for c in buf.drafts:
+            if c.row > next_row and c.row < row:
+                next_row = c.row
+        vim.current.window.cursor = (next_row, 1)
+        vim.command("normal! zz")
+
+    def next_comment(self, buffer_path, row):
+        if self.__after.buffer == buffer_path:
+            self.next_comment_in_buffer(self.__after, row)
+        if self.__before.buffer == buffer_path:
+            self.next_comment_in_buffer(self.__before, row)
+
+    def prev_comment(self, buffer_path, row):
+        if self.__after.buffer == buffer_path:
+            self.prev_comment_in_buffer(self.__after, row)
+        if self.__before.buffer == buffer_path:
+            self.prev_comment_in_buffer(self.__before, row)
 
 def get_config():
     rcpath = os.path.join(os.path.expanduser('~'), '.gerritrc.json')
@@ -277,3 +309,11 @@ def discard_draft():
 
 def dispose():
     command_handler.dispose()
+
+def next_comment():
+    row, col = vim.current.window.cursor
+    command_handler.next_comment(vim.current.buffer.name, row)
+
+def prev_comment():
+    row, col = vim.current.window.cursor
+    command_handler.prev_comment(vim.current.buffer.name, row)

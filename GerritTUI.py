@@ -17,7 +17,7 @@ class GerritTUI(object):
         if not os.path.exists(tmp_dir):
             os.makedirs(tmp_dir)
 
-        self.gerrit = Gerrit(cfg['gerrit_url'] + '/a', cfg['user'], cfg['api_token'], self.set_status)
+        self.gerrit = Gerrit(cfg['gerrit_url'] + '/a', cfg['user'], cfg['api_token'])
 
         self.register_signals()
         self.previous_views = []
@@ -134,9 +134,6 @@ class GerritTUI(object):
         urwid.connect_signal(term, "closed", self.set_home_view)
         self.previous_views.append(self.body)
         self.body = term
-
-    def set_status(self, status):
-        self.status_box._w = urwid.Text(status)
 
     def create_main_screen(self):
         title = urwid.Text('GerritTUI', align='left')

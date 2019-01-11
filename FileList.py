@@ -180,7 +180,7 @@ class FileList(urwid.WidgetWrap):
 
         # Dump diff Properties
         diff_properties = {
-                "before" : { "patch_set" : self.diff_against, "fname" : base_fname, "repopath" : repo_path_base },
+                "before" : { "patch_set" : str(self.diff_against), "fname" : base_fname, "repopath" : repo_path_base },
                 "after": { "patch_set" : str(self.patchset), "fname" : gerrit_fname, "repopath" : repo_path_gerrit }
         }
         with open(os.path.join(tmpdir, "diff_properties.json"), "w") as dp:
@@ -189,7 +189,7 @@ class FileList(urwid.WidgetWrap):
 
         # Open popup
         if 'TMUX' in os.environ:
-            os.system("tmux new-window -nsinter '" + ' '.join(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]) + "'")
+            os.system("tmux new-window -n %s~%s '" % (self.sha[0:7], os.path.basename(repo_path_gerrit)) + ' '.join(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]) + "'")
         else:
             term = urwid.Terminal(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname], main_loop=self.main.mainloop, escape_sequence='meta a')
             term.change_focus(True)

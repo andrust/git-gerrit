@@ -104,3 +104,15 @@ function! PrevComment()
 endfunction
 command! -nargs=0 PrevComment call PrevComment()
 nnoremap <c-p> :PrevComment<cr>
+
+function! SetMapping()
+    if &filetype != 'Comment' && &filetype != 'Draft'
+        nnoremap q :qa!<CR>
+        vnoremap q :qa!<CR>
+    else
+        nnoremap q :q!<CR>
+    endif
+endfunction
+autocmd BufEnter * call SetMapping()
+
+autocmd VimEnter * wincmd l

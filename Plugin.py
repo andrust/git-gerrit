@@ -110,8 +110,6 @@ class CommentHandler(object):
         vim.command('sign define %s text=C' % CommentHandler.COMMENT_SIGN)
         vim.command('sign define %s text=D' % CommentHandler.DRAFT_SIGN)
         vim.command('set splitbelow')
-        vim.command('autocmd FileType %s nnoremap q :q!<cr>' % CommentHandler.COMMENT_SIGN)
-        vim.command('autocmd FileType %s nnoremap q :call SaveDraft()<cr>:q!<cr>' % CommentHandler.DRAFT_SIGN)
 
     def load_drafts(self, draft_json):
         for file_path_in_repo, comments in draft_json.iteritems():
@@ -208,6 +206,7 @@ class CommentHandler(object):
             comment = self.__after.add_draft("", row)
 
         self.open_draft(comment, has_focus=True)
+        vim.command('call SetMapping()')
 
 
     def save_draft(self):

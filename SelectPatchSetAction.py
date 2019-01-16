@@ -15,7 +15,7 @@ class SelectPatchSetAction(urwid.WidgetWrap):
             num = rev['_number']
             buttons.append(urwid.RadioButton(button_grp, str(num), state=default, on_state_change=self.set_current_patchset, user_data=(num, sha)))
         select_button = urwid.Filler(urwid.Padding(urwid.Button("Select", self.activate_selected_revision), 'center', 10), "top")
-        button_listbox = urwid.ListBox(sorted(buttons, key=lambda w: int(w.get_label())))
+        button_listbox = urwid.ListBox(sorted(buttons, reverse=True, key=lambda w: int(w.get_label())))
         layout = urwid.Columns([button_listbox, select_button])
         self.cview.main.open_popup(urwid.LineBox(layout), len(buttons) + 2, 30)
 

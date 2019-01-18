@@ -48,7 +48,7 @@ class CommentAction(urwid.WidgetWrap):
                 else:
                     return comments_for_revision
 
-        except OSError:
+        except IOError:
             return None
 
     def remove_posted_drafts(self):

@@ -38,6 +38,15 @@ class Gerrit(object):
         u += '/submit/'
         requests.post(u, auth=self.auth_token, data='{}', headers={"Content-Type": 'application/json'})
 
+    def publish(self, change_id, revision):
+        u = self.url
+        u += '/changes/'
+        u += change_id
+        u += '/revisions/'
+        u += revision
+        u += '/publish/'
+        requests.post(u, auth=self.auth_token, data='{}', headers={"Content-Type": 'application/json'})
+
     def set_labels(self, change_id, revision, labels):
         u = self.url
         u += '/changes/'

@@ -61,6 +61,7 @@ class GerritTUI(object):
             "status_conflict",
             "status_abandoned",
             "status_merged",
+            "status_draft",
             "line",
             "button"
         ]

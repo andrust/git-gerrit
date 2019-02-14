@@ -62,7 +62,7 @@ class ChangeList(urwid.ListBox):
         return urwid.AttrMap(urwid.Text())
 
     def get_status(self, c):
-        if c['status'] in ['DRAFT', 'NEW']:
+        if c['status'] == 'NEW':
             if "mergeable" in c.keys() and "submittable" in c.keys():
                 if c['mergeable']:
                     if c['submittable']:
@@ -72,11 +72,15 @@ class ChangeList(urwid.ListBox):
                 else:
                     return urwid.AttrMap(urwid.Text("conflict"), "status_conflict")
             else:
-                return urwid.AttrMap(urwid.Text("noinfo"), "line")
+                return urwid.AttrMap(urwid.Text("undefined"), "line")
         elif c['status'] == 'MERGED':
             return urwid.AttrMap(urwid.Text("merged"), "status_merged")
         elif c['status'] == 'ABANDONED':
             return urwid.AttrMap(urwid.Text("abandoned"), "status_abandoned")
+        elif c['status'] == 'DRAFT':
+            return urwid.AttrMap(urwid.Text("draft"), "status_draft")
+        else:
+            return urwid.AttrMap(urwid.Text("undefined"), "line")
 
     def size(self):
         return len(self.body)

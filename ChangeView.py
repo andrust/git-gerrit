@@ -13,6 +13,7 @@ from CommitMsg import CommitMsg
 
 from AbandonAction import AbandonAction
 from ReviewAction import ReviewAction
+from PublishAction import PublishAction
 from InstantSubmitAction import InstantSubmitAction
 from SubmitAction import SubmitAction
 from SelectPatchSetAction import SelectPatchSetAction
@@ -67,22 +68,25 @@ class ChangeView(urwid.WidgetWrap):
         self._w = urwid.Columns([(19, actions_column), main_column], dividechars=1, box_columns=[1])
 
     def actions(self):
-        buttons = [
-            ReviewAction(self),
-            SubmitAction(self),
-            InstantSubmitAction(self),
-            SelectPatchSetAction(self),
-            CommentAction(self),
-            ManageReviewersAction(self),
-            AbandonAction(self),
-            urwid.Divider(),
-            urwid.Divider(),
-            urwid.Divider(),
-            urwid.Text('Download'),
-            urwid.Divider(),
-            DLCherryPickAction(self),
-            DLCheckoutAction(self)
-        ]
+        buttons = []
+        buttons.append(ReviewAction(self)),
+        if self.change["status"] == 'NEW':
+            buttons.append(SubmitAction(self)),
+            buttons.append(InstantSubmitAction(self)),
+        if self.change["status"] == 'DRAFT':
+            buttons.append(PublishAction(self)),
+        buttons.append(SelectPatchSetAction(self)),
+        buttons.append(CommentAction(self)),
+        buttons.append(ManageReviewersAction(self)),
+        if self.change["status"] in ['NEW', 'DRAFT']:
+            buttons.append(AbandonAction(self)),
+        buttons.append(urwid.Divider()),
+        buttons.append(urwid.Divider()),
+        buttons.append(urwid.Divider()),
+        buttons.append(urwid.Text('Download')),
+        buttons.append(urwid.Divider()),
+        buttons.append(DLCherryPickAction(self)),
+        buttons.append(DLCheckoutAction(self))
 
         return urwid.Filler(urwid.ListBox(buttons), height=len(buttons), valign='middle', min_height=len(buttons))
 

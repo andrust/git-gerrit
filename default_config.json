@@ -36,6 +36,7 @@
         "status_conflict": ["h1", "h8", "h0"],
         "status_abandoned": ["h5", "h8", "h0"],
         "status_merged": ["h3", "h8", "h0"],
+        "status_draft": ["h6", "h8", "h0"],
         "line": ["", "h8", "h0"],
         "button": ["h7", "h8", "h10"]
     }

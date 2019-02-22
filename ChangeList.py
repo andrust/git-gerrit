@@ -67,8 +67,18 @@ class ChangeList(urwid.ListBox):
                 if c['mergeable']:
                     if c['submittable']:
                         return urwid.AttrMap(urwid.Text("submittable"), "status_submittable")
-                    else:
-                        return urwid.AttrMap(urwid.Text("pending"), "status_pending")
+                    elif 'labels' in c and 'Verified' in c['labels'] and 'Code-Review' in c['labels']:
+                        if 'blocking' in c['labels']['Verified']:
+                            return urwid.AttrMap(urwid.Text("rejected"), "status_rejected")
+                        elif 'blocking' in c['labels']['Code-Review']:
+                            return urwid.AttrMap(urwid.Text("denied"), "status_denied")
+                        elif 'approved' in c['labels']['Verified']:
+                            if 'disliked' in c['labels']['Code-Review']:
+                                return urwid.AttrMap(urwid.Text("disliked"), "status_disliked")
+                            elif 'recommended' in c['labels']['Code-Review']:
+                                return urwid.AttrMap(urwid.Text("suggested"), "status_suggested")
+                            return urwid.AttrMap(urwid.Text("verified"), "status_verified")
+                    return urwid.AttrMap(urwid.Text("pending"), "status_pending")
                 else:
                     return urwid.AttrMap(urwid.Text("conflict"), "status_conflict")
             else:

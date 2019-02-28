@@ -3,6 +3,7 @@ import os
 import json
 
 from SelectableListItem import SelectableListItem
+from InputHandler import InputHandler
 from Button import Button
 from Git import Git
 
@@ -128,7 +129,7 @@ class FileList(urwid.WidgetWrap):
         radio_list = urwid.ListBox(radios)
         select_button = urwid.Filler(urwid.Padding(urwid.Button("Select", self.main.close_popup), 'center', 10), "top")
         layout = urwid.Columns([radio_list, select_button])
-        self.main.open_popup(urwid.LineBox(layout), selected_revision_number + 3, 25)
+        self.main.open_popup(InputHandler(urwid.LineBox(layout), {'ctrl ^' : self.main.close_popup}), selected_revision_number + 3, 25)
 
     def set_selected_base(self, w, selected, value):
         if selected:

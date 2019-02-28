@@ -1,6 +1,7 @@
 import urwid
 
 from Button import Button
+from InputHandler import InputHandler
 
 class ReviewAction(urwid.WidgetWrap):
     def __init__(self, chageview):
@@ -27,9 +28,9 @@ class ReviewAction(urwid.WidgetWrap):
         col = urwid.BoxAdapter((urwid.Columns(content)), 7)
         apply_ = urwid.Padding(urwid.Button("Apply", self.send_labels), 'center', 9)
         layout = urwid.ListBox([col, apply_])
-        self.cview.main.open_popup(urwid.LineBox(layout), 10, 26)
+        self.cview.main.open_popup(InputHandler(urwid.LineBox(layout), {'ctrl ^' : self.send_labels}), 10, 26)
 
-    def send_labels(self, button):
+    def send_labels(self, button=None):
         if 0 < len(self.labels.keys()):
             self.cview.main.gerrit.set_labels(self.cview.change['id'], self.cview.active_revision_sha, self.labels)
         self.cview.main.close_popup()

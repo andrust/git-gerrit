@@ -5,6 +5,7 @@ import os
 import json
 
 from Button import Button
+from InputHandler import InputHandler
 
 class CommentAction(urwid.WidgetWrap):
     def __init__(self, chageview):
@@ -65,12 +66,12 @@ class CommentAction(urwid.WidgetWrap):
         cancel = urwid.Filler(urwid.Padding(urwid.Button("Cancel", self.cview.main.close_popup), 'center', 10))
         buttons = urwid.Columns([post, cancel])
         pile = urwid.Pile([(1, txt), editor_box, (6, urwid.ListBox(self.file_comments_list)), (1, buttons)])
-        self.cview.main.open_popup(urwid.LineBox(pile), 21, 70)
+        self.cview.main.open_popup(InputHandler(urwid.LineBox(pile), {'ctrl ^' : self.post_comment}), 21, 70)
 
     def set_comment(self, w, value):
         self.message = value
 
-    def post_comment(self, w):
+    def post_comment(self, w=None):
         self.cview.main.gerrit.post_comment(self.cview.change['id'], self.cview.active_revision_sha, self.editor.edit_text, self.file_comments)
         self.remove_posted_drafts()
         self.editor.edit_text = ""

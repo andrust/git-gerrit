@@ -1,6 +1,7 @@
 import urwid
 
 from Button import Button
+from InputHandler import InputHandler
 
 class SelectPatchSetAction(urwid.WidgetWrap):
     def __init__(self, chageview):
@@ -17,7 +18,7 @@ class SelectPatchSetAction(urwid.WidgetWrap):
         select_button = urwid.Filler(urwid.Padding(urwid.Button("Select", self.activate_selected_revision), 'center', 10), "top")
         button_listbox = urwid.ListBox(sorted(buttons, reverse=True, key=lambda w: int(w.get_label())))
         layout = urwid.Columns([button_listbox, select_button])
-        self.cview.main.open_popup(urwid.LineBox(layout), len(buttons) + 2, 30)
+        self.cview.main.open_popup(InputHandler(urwid.LineBox(layout), {'ctrl ^' : self.activate_selected_revision}), len(buttons) + 2, 30)
 
     def set_current_patchset(self, w, state, value):
         if state:
@@ -25,6 +26,6 @@ class SelectPatchSetAction(urwid.WidgetWrap):
             self.cview.active_revision_number = num
             self.cview.active_revision_sha = sha
 
-    def activate_selected_revision(self, w):
+    def activate_selected_revision(self, w=None):
         self.cview.main.close_popup()
         self.cview.refresh()

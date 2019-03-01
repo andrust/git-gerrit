@@ -1,6 +1,8 @@
 import datetime
 import re
 import urwid
+import subprocess
+import shlex
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -14,9 +16,10 @@ import time
 from SelectableListItem import SelectableListItem
 
 class Jenkins(object):
-    def __init__(self, jenkins_url, user, token):
+    def __init__(self, jenkins_url, user, token, colored=True):
         self.auth_token = HTTPBasicAuth(user, token)
         self.url = jenkins_url
+        self.colored = colored
 
 
     def get_console_log(self, job, build_number):
@@ -25,8 +28,16 @@ class Jenkins(object):
         u += job
         u += '/'
         u += build_number
-        u += '/consoleText'
-        return requests.get(u, auth=self.auth_token, verify=False).content
+        if self.colored:
+            u+='/logText/progressiveHtml?start=0'
+        else:
+            u += '/consoleText'
+        log = requests.get(u, auth=self.auth_token, verify=False).content
+        if self.colored:
+            log = '<br/>\n'.join(log.splitlines())
+            p = subprocess.Popen(shlex.split("elinks -dump -dump-color-mode 1 -dump-width 150 -dump-charset utf8 -no-references"), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+            log = p.communicate(input=log)[0]
+        return log
 
     def get_console_log_since_line(self, job, build_number, since_line):
         new = self.get_console_log(job, build_number).splitlines()
@@ -62,6 +73,10 @@ class CIJobs(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, active_patch_number):
         self.console_refresher = None
         self.main = gerrittui
+        if "colored_console" in self.main.cfg.keys():
+            self.colored_console_log = self.main.cfg["colored_console"]
+        else:
+            self.colored_console_log = False
 
         super(CIJobs, self).__init__(urwid.Filler(urwid.Text("Loading")))
         self.refresh(change, active_patch_number)
@@ -87,14 +102,14 @@ class CIJobs(urwid.WidgetWrap):
 
     def pull_log(self, w, target_file):
         with open(target_file, "w") as f:
-            txt = Jenkins(self.main.cfg['jenkins_url'], self.main.cfg['user'], self.main.cfg['jenkins_token']).get_console_log(w.name, w.id)
+            txt = Jenkins(self.main.cfg['jenkins_url'], self.main.cfg['user'], self.main.cfg['jenkins_token'], self.colored_console_log).get_console_log(w.name, w.id)
             f.write(txt)
             self.log_len = len(txt.splitlines())
 
 
     def refresh_log(self, w, target_file):
         with open(target_file, "a") as f:
-            txt = Jenkins(self.main.cfg['jenkins_url'], self.main.cfg['user'], self.main.cfg['jenkins_token']).get_console_log_since_line(w.name, w.id, self.log_len)
+            txt = Jenkins(self.main.cfg['jenkins_url'], self.main.cfg['user'], self.main.cfg['jenkins_token'], self.colored_console_log).get_console_log_since_line(w.name, w.id, self.log_len)
             txt_len = len(txt.splitlines())
             self.log_len += txt_len
             if txt_len > 0:

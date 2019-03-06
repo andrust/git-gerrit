@@ -7,9 +7,10 @@ class ReviewAction(urwid.WidgetWrap):
     def __init__(self, chageview):
         self.cview = chageview
         self.labels = {"Verified": 0, "Code-Review": 0}
+        self.cview.add_hotkey("R", self.open_popup)
         super(ReviewAction, self).__init__(Button("Review", "button", self.open_popup))
 
-    def open_popup(self, w):
+    def open_popup(self, w=None):
         for r in self.cview.change_reviewers:
             if self.cview.main.cfg['user'] == r['username'] and 'approvals' in r.keys():
                 self.labels = r['approvals']

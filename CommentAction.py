@@ -14,6 +14,7 @@ class CommentAction(urwid.WidgetWrap):
         self.file_comments = {}
         self.drafts_left = {}
         self.file_comments_list = urwid.SimpleListWalker([])
+        self.cview.add_hotkey("C", self.open_popup)
         super(CommentAction, self).__init__(Button("Comment", "button", self.open_popup))
 
     def load_drafts(self):
@@ -58,7 +59,7 @@ class CommentAction(urwid.WidgetWrap):
             json.dump(self.drafts_left, f)
 
 
-    def open_popup(self, w):
+    def open_popup(self, w=None):
         self.file_comments = self.load_drafts()
         txt = urwid.Filler(urwid.Text('Enter Comment'))
         editor_box = urwid.LineBox(urwid.Filler(self.editor), tlcorner=u'·', tline=u'·', lline=u'·', trcorner=u'·', blcorner=u'·', rline=u'·', bline=u'·', brcorner=u'·')

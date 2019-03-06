@@ -10,6 +10,7 @@ from JenkinsComments import JenkinsComments
 from Reviewers import Reviewers
 from ChangeInfo import ChangeInfo
 from CommitMsg import CommitMsg
+from InputHandler import InputHandler
 
 from AbandonAction import AbandonAction
 from ReviewAction import ReviewAction
@@ -29,6 +30,8 @@ class ChangeView(urwid.WidgetWrap):
         self.main = gerrittui
         super(ChangeView, self).__init__(urwid.Filler(urwid.Text("Loading...")))
         self.clear_tempdir()
+
+        self.hotkeys = {}
 
         # State
         self.change = self.main.gerrit.change_details(self.change_id)
@@ -56,6 +59,9 @@ class ChangeView(urwid.WidgetWrap):
             else:
                 os.unlink(fpath)
 
+    def add_hotkey(self, key, action):
+        self.hotkeys[key] = action
+
 
     def setup_layout(self):
         top_row = urwid.Columns([self.commit_msg, self.change_info, self.reviewers])
@@ -65,7 +71,7 @@ class ChangeView(urwid.WidgetWrap):
         main_column = urwid.Pile([top_row, file_row, comments_row])
         actions_column = self.actions()
 
-        self._w = urwid.Columns([(19, actions_column), main_column], dividechars=1, box_columns=[1])
+        self._w = InputHandler(urwid.Columns([(19, actions_column), main_column], dividechars=1, box_columns=[1]), self.hotkeys)
 
     def actions(self):
         buttons = []

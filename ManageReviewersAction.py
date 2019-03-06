@@ -12,6 +12,7 @@ class ManageReviewersAction(urwid.WidgetWrap):
         self.reviewers_to_remove = []
         self.reviewers_proposed = urwid.SimpleListWalker([])
         self.editor = None
+        self.cview.add_hotkey("I", self.open_popup)
         super(ManageReviewersAction, self).__init__(Button("Set Reviewers", "button", self.open_popup))
 
     def apply_reviewers(self, w=None):
@@ -42,7 +43,7 @@ class ManageReviewersAction(urwid.WidgetWrap):
             while self.reviewers_to_remove.count(w.get_label()) > 0:
                 self.reviewers_to_remove.remove(w.get_label())
 
-    def open_popup(self, w):
+    def open_popup(self, w=None):
         removable_items = []
         for r in self.cview.change["removable_reviewers"]:
             name = self.cview.main.gerrit.accounts(r["_account_id"])["username"]

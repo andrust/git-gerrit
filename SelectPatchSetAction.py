@@ -6,9 +6,10 @@ from InputHandler import InputHandler
 class SelectPatchSetAction(urwid.WidgetWrap):
     def __init__(self, chageview):
         self.cview = chageview
+        self.cview.add_hotkey("P", self.open_popup)
         super(SelectPatchSetAction, self).__init__(Button("Select Patch", "button", self.open_popup))
 
-    def open_popup(self, w):
+    def open_popup(self, w=None):
         button_grp = []
         buttons = []
         for sha, rev in self.cview.change['revisions'].iteritems():

@@ -11,4 +11,5 @@ class InputHandler(urwid.WidgetWrap):
         if key in self.callbacks.iterkeys():
             self.callbacks[key]()
         else:
+            #print "key:'%s' size:'%s'" % (key, str(size))
             return super(InputHandler, self).keypress(size, key)

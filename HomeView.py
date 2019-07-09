@@ -9,10 +9,10 @@ class HomeView(urwid.WidgetWrap):
         self.outgoing = ChangeList(gerrittui, ['owner:self', 'status:open'])
         self.outgoing_box = urwid.LineBox(self.outgoing, 'Outgoing (' + str(self.outgoing.size()) + ')', 'left', tlcorner='*', tline=' ', lline='', trcorner='', blcorner='', rline='', bline='', brcorner='')
 
-        self.incoming_done = ChangeList(gerrittui, 'reviewer:self status:open -owner:self ( -label:Code-Review=0,self OR ( label:Code-Review=-2,user=self AND reviewedby:self ) )'.split())
+        self.incoming_done = ChangeList(gerrittui, 'reviewer:self status:open -owner:self AND ( -label:Code-Review=0,self OR ( label:Code-Review=-2,user=self AND reviewedby:self ) )'.split())
         self.incoming_done_box = urwid.LineBox(self.incoming_done, 'Incoming Seen (' + str(self.incoming_done.size()) + ')', 'left', tlcorner='*', tline=' ', lline='', trcorner='', blcorner='', rline='', bline='', brcorner='')
 
-        self.incoming = ChangeList(gerrittui, 'reviewer:self status:open -owner:self ( label:Code-Review=0,self OR ( label:Code-Review=-2,user=self AND -reviewedby:self ) )'.split())
+        self.incoming = ChangeList(gerrittui, 'reviewer:self status:open -owner:self AND ( label:Code-Review=0,self OR ( label:Code-Review=-2,user=self AND -reviewedby:self ) )'.split())
         self.incoming_box = urwid.LineBox(self.incoming, 'Incoming New (' + str(self.incoming.size()) + ')', 'left', tlcorner='*', tline=' ', lline='', trcorner='', blcorner='', rline='', bline='', brcorner='')
 
         pile = urwid.Pile([('weight', self.outgoing.size() + 1, self.outgoing_box), (1, urwid.Filler(urwid.Divider(u'·'))), ('weight', self.incoming.size() + 1, self.incoming_box), (1, urwid.Filler(urwid.Divider(u'·'))), ('weight', self.incoming_done.size() + 1, self.incoming_done_box)])

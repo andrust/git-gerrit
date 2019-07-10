@@ -40,7 +40,7 @@ class ReviewAction(urwid.WidgetWrap):
                     'meta f1' : self.cr_disliked,
                     'meta f2' : self.cr_denied
                   }
-        self.cview.main.open_popup(InputHandler(urwid.LineBox(layout), hotkeys), 10, 26)
+        self.cview.main.open_popup(InputHandler(urwid.LineBox(layout), hotkeys), 10, 36)
 
     def send_labels(self, button=None):
         if 0 < len(self.labels.keys()):

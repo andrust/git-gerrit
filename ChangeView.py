@@ -43,7 +43,7 @@ class ChangeView(urwid.WidgetWrap):
         self.filelist = FileList(gerrittui, self.change, self.active_revision_sha)
         self.comments = Comments(self.main, self.change)
         self.jenkins_comments = JenkinsComments(self.main, self.change, self.active_revision_number)
-        self.reviewers = Reviewers(self.change_reviewers)
+        self.reviewers = Reviewers(self.change_reviewers, self.change['permitted_labels'].keys())
         self.change_info = ChangeInfo(self.main, self.change, self.active_revision_number, self.active_revision_sha)
         self.commit_msg = CommitMsg(self.change, self.active_revision_sha)
         self.ci_jobs = CIJobs(self.main, self.change, self.active_revision_number)
@@ -103,6 +103,7 @@ class ChangeView(urwid.WidgetWrap):
         self.filelist.refresh(self.change, self.active_revision_sha)
         self.comments.refresh(self.change)
         self.jenkins_comments.refresh(self.change, self.active_revision_number)
+
         self.reviewers.refresh(self.change_reviewers)
         self.change_info.refresh(self.change, self.active_revision_number, self.active_revision_sha)
         self.commit_msg.refresh(self.change, self.active_revision_sha)

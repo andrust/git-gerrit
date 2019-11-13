@@ -7,6 +7,13 @@ import os
 from GerritTUI import GerritTUI
 
 if __name__ == '__main__':
+    if not "LANG" in os.environ.keys():
+        print("LANG environment variable not setted properly!")
+        exit()
+    elif not "utf-8" in os.environ["LANG"].lower():
+        print("LANG environment variable needs to be utf-8!")
+        exit()
+
     rcpath = os.path.join(os.path.expanduser('~'), '.gerritrc.json')
     cfg = None
     with open(rcpath, 'r') as f:

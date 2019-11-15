@@ -6,13 +6,16 @@ export LANG='en_US.UTF-8'
 MISSING_DEPENDENCIES=()
 
 function dependency_check() {
-    if ! pip list 2>/dev/null | grep -q ${1}; then
-        MISSING_DEPENDENCIES+=("${1}")
-    fi
+    installed_pip_packages=$(pip list 2>/dev/null)
+    for DEP in "${@}";
+    do
+        if ! echo "${installed_pip_packages}" | grep -q "${DEP}"; then
+            MISSING_DEPENDENCIES+=("${DEP}")
+        fi
+    done
 }
 
-dependency_check urwid
-dependency_check requests
+dependency_check urwid requests
 
 if [ "${#MISSING_DEPENDENCIES[@]}" -ne 0 ]; then
     echo "Please install missing dependencies with the following command:"

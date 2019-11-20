@@ -10,7 +10,11 @@ class JenkinsComments(urwid.WidgetWrap):
 
 
     def refresh(self, change, selected_revision_number):
-        ci_id = self.main.gerrit.accounts(self.main.cfg['ci_user'])["_account_id"]
+        if 'ci' in self.main.cfg:
+            ci_id = self.main.gerrit.accounts(self.main.cfg['ci']['ci_user'])["_account_id"]
+        else:
+            ci_id = ""
+ 
 
         latest_revision_number = change['revisions'][change['current_revision']]['_number']
         ci_comments = []

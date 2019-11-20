@@ -10,7 +10,10 @@ class Comments(urwid.WidgetWrap):
 
 
     def refresh(self, change):
-        ci_id = self.main.gerrit.accounts(self.main.cfg['ci_user'])["_account_id"]
+        if 'ci' in self.main.cfg:
+            ci_id = self.main.gerrit.accounts(self.main.cfg['ci']['ci_user'])["_account_id"]
+        else:
+            ci_id = ""
 
         human_comments = []
         for m in reversed(change['messages']):

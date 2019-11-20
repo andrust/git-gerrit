@@ -82,13 +82,14 @@ class CIJobs(urwid.WidgetWrap):
         self.refresh(change, active_patch_number)
 
     def refresh(self, change, active_patch_number):
-        ci_id = self.main.gerrit.accounts(self.main.cfg['ci_user'])["_account_id"]
         results = []
+        if 'ci' in self.main.cfg:
+            ci_id = self.main.gerrit.accounts(self.main.cfg['ci']['ci_user'])["_account_id"]
 
-        for v in get_job_status(change, self.main.cfg['jenkins_url'], ci_id, active_patch_number).itervalues():
-            txt = "%20s[%3s]: %s" % (v.name, v.id, v.status)
-            results.append(SelectableListItem(("job_" + v.status, txt)))
-            urwid.connect_signal(results[-1], "click", self.open_popup, v)
+            for v in get_job_status(change, self.main.cfg['ci']['jenkins_url'], ci_id, active_patch_number).itervalues():
+                txt = "%20s[%3s]: %s" % (v.name, v.id, v.status)
+                results.append(SelectableListItem(("job_" + v.status, txt)))
+                urwid.connect_signal(results[-1], "click", self.open_popup, v)
 
         self._w = urwid.ListBox(results)
 
@@ -102,14 +103,20 @@ class CIJobs(urwid.WidgetWrap):
 
     def pull_log(self, w, target_file):
         with open(target_file, "w") as f:
-            txt = Jenkins(self.main.cfg['jenkins_url'], self.main.cfg['user'], self.main.cfg['jenkins_token'], self.colored_console_log).get_console_log(w.name, w.id)
+            if 'ci' in self.main.cfg:
+                txt = Jenkins(self.main.cfg['ci']['jenkins_url'], self.main.cfg['user'], self.main.cfg['ci']['jenkins_token'], self.colored_console_log).get_console_log(w.name, w.id)
+            else:
+                txt = "No jenkins setting in config!"
             f.write(txt)
             self.log_len = len(txt.splitlines())
 
 
     def refresh_log(self, w, target_file):
         with open(target_file, "a") as f:
-            txt = Jenkins(self.main.cfg['jenkins_url'], self.main.cfg['user'], self.main.cfg['jenkins_token'], self.colored_console_log).get_console_log_since_line(w.name, w.id, self.log_len)
+            if 'ci' in self.main.cfg:
+                txt = Jenkins(self.main.cfg['ci']['jenkins_url'], self.main.cfg['user'], self.main.cfg['ci']['jenkins_token'], self.colored_console_log).get_console_log_since_line(w.name, w.id, self.log_len)
+            else:
+                txt = "No jenkins setting in config!"
             txt_len = len(txt.splitlines())
             self.log_len += txt_len
             if txt_len > 0:

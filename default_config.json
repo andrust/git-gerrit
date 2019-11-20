@@ -2,10 +2,12 @@
     "gerrit_url": "https://gerrit.example.com",
     "user": "username",
     "api_token": "v8rz0vMexamplexampleexampleWk6YUoLiRw",
-    "ci_user": "ci_bot",
     "tmp_dir": "/tmp/gerrit",
-    "jenkins_token": "616aabababababababababafdfdfdf0f64",
-    "jenkins_url": "https://jenkins.example.com:8443",
+    "ci": {
+       "ci_user": "ci_bot",
+       "jenkins_token": "616aabababababababababafdfdfdf0f64",
+       "jenkins_url": "https://jenkins.example.com:8443",
+    }
     "colored_console": false,
     "predefined_search": {
         "master" : "project:<project> status:open branch:master -owner:self"

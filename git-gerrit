@@ -3,10 +3,15 @@
 
 import json
 import os
+import sys
 
 from GerritTUI import GerritTUI
 
 if __name__ == '__main__':
+    if int(sys.version[0]) > 2:
+        print("Python 3 not supported! Please run the script with python 2!")
+        exit()
+
     if not "LANG" in os.environ.keys():
         print("LANG environment variable not setted properly!")
         exit()
@@ -15,6 +20,11 @@ if __name__ == '__main__':
         exit()
 
     rcpath = os.path.join(os.path.expanduser('~'), '.gerritrc.json')
+
+    if not os.path.isfile(rcpath):
+        print("Please create your config file in {} based on default_config.json!").format(rcpath)
+        exit()
+
     cfg = None
     with open(rcpath, 'r') as f:
         cfg = json.load(f)

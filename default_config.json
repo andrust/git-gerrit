@@ -4,15 +4,16 @@
     "api_token": "v8rz0vMexamplexampleexampleWk6YUoLiRw",
     "tmp_dir": "/tmp/gerrit",
     "ci": {
-       "ci_user": "ci_bot",
-       "jenkins_token": "616aabababababababababafdfdfdf0f64",
-       "jenkins_url": "https://jenkins.example.com:8443",
+        "ci_user": "ci_bot",
+        "jenkins_token": "616aabababababababababafdfdfdf0f64",
+        "jenkins_url": "https://jenkins.example.com:8443",
     }
     "colored_console": false,
     "predefined_search": {
-        "master" : "project:<project> status:open branch:master -owner:self"
+        "master" : "status:open branch:master -owner:self",
+        "recently closed": "owner:self -age:1w status:closed"
     },
-
+    "diff-window": "tmux-split",
     "palette": {
         "commit_sha": ["h3", "h8", "h0"],
         "comment_header": ["h4", "h8", "h0"],
@@ -39,7 +40,7 @@
         "status_conflict": ["h1", "h8", "h0"],
         "status_abandoned": ["h5", "h8", "h0"],
         "status_merged": ["h3", "h8", "h0"],
-        "status_draft": ["h6", "h8", "h0"],
+        "status_draft": ["h13", "h8", "h0"],
         "status_denied": ["h1", "h8", "h0"],
         "status_rejected": ["h1", "h8", "h0"],
         "status_suggested": ["h6", "h8", "h0"],

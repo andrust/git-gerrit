@@ -1,5 +1,7 @@
 import urwid
 
+from Timestamp import Timestamp
+
 class ChangeInfo(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, selected_revision_number, selected_revision_sha):
         self.main = gerrittui
@@ -16,7 +18,8 @@ class ChangeInfo(urwid.WidgetWrap):
         self.add_item("Project", change["project"])
         self.add_item("Branch", change["branch"])
         self.add_item("State", change["status"].lower())
-        self.add_item("Updated", change["updated"][0:16])
+        self.add_item("Created", Timestamp(change["revisions"][selected_revision_sha]['created']).str)
+        self.add_item("Updated", Timestamp(change["updated"]).str)
         self.add_item("Refspec", change["revisions"][selected_revision_sha]["ref"])
         self.add_item("Patchset", str(selected_revision_number))
 

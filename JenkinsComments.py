@@ -2,6 +2,7 @@ import urwid
 
 from SelectableListItem import SelectableListItem
 from CommentFilter import is_filtered_comment
+from Timestamp import Timestamp
 
 class JenkinsComments(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, selected_revision_number):
@@ -23,7 +24,7 @@ class JenkinsComments(urwid.WidgetWrap):
             rev = m['_revision_number']
             if m['author']['_account_id'] == ci_id and rev == selected_revision_number and not is_filtered_comment(self.main.cfg, m["message"]):
                 commenter = self.main.gerrit.accounts(m['author']['_account_id'])['username']
-                date = m['date'][0:16]
+                date = Timestamp(m['date']).str
                 msg = urwid.Text(m['message'])
                 header = urwid.SelectableIcon(("comment_header", "%13s #%2i %8s:" % (date, rev, commenter)))
                 ci_comments.append(urwid.Pile([header, msg, urwid.Divider()]))

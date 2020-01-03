@@ -23,6 +23,8 @@ from ManageReviewersAction import ManageReviewersAction
 from CIJobs import CIJobs
 from DLCherryPickAction import DLCherryPickAction
 from DLCheckoutAction import DLCheckoutAction
+from GitResetHeadAction import GitResetHeadAction
+from GitResetPrevAction import GitResetPrevAction
 
 class ChangeView(urwid.WidgetWrap):
     def __init__(self, gerrittui, change_id):
@@ -75,7 +77,8 @@ class ChangeView(urwid.WidgetWrap):
 
     def actions(self):
         buttons = []
-        buttons.append(ReviewAction(self)),
+        if self.change["status"] in ['NEW', 'DRAFT']:
+            buttons.append(ReviewAction(self)),
         if self.change["status"] == 'NEW':
             buttons.append(SubmitAction(self)),
             buttons.append(InstantSubmitAction(self)),
@@ -83,7 +86,8 @@ class ChangeView(urwid.WidgetWrap):
             buttons.append(PublishAction(self)),
         buttons.append(SelectPatchSetAction(self)),
         buttons.append(CommentAction(self)),
-        buttons.append(ManageReviewersAction(self)),
+        if self.change["status"] in ['NEW', 'DRAFT']:
+            buttons.append(ManageReviewersAction(self)),
         if self.change["status"] in ['NEW', 'DRAFT']:
             buttons.append(AbandonAction(self)),
         buttons.append(urwid.Divider()),
@@ -92,7 +96,12 @@ class ChangeView(urwid.WidgetWrap):
         buttons.append(urwid.Text('Download')),
         buttons.append(urwid.Divider()),
         buttons.append(DLCherryPickAction(self)),
-        buttons.append(DLCheckoutAction(self))
+        buttons.append(DLCheckoutAction(self)),
+        buttons.append(urwid.Divider()),
+        buttons.append(urwid.Text('Git')),
+        buttons.append(GitResetHeadAction(self)),
+        buttons.append(GitResetPrevAction(self))
+
 
         return urwid.Filler(urwid.ListBox(buttons), height=len(buttons), valign='middle', min_height=len(buttons))
 

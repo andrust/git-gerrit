@@ -61,3 +61,10 @@ class Git(object):
                 raise Exception(msg)
         else:
             raise Exception("Your index is dirty, reset, commit or stash your changes")
+
+    def reset(self, sha):
+        try:
+            self.cmd("git reset --hard %s" % (sha))
+        except Exception as e:
+            msg = str(e) + "\n" + output[0] + output[1]
+            raise Exception(msg)

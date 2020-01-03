@@ -1,6 +1,7 @@
 import urwid
 
 from SelectableListItem import SelectableListItem
+from CommentFilter import is_filtered_comment
 
 class JenkinsComments(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, selected_revision_number):
@@ -20,7 +21,7 @@ class JenkinsComments(urwid.WidgetWrap):
         ci_comments = []
         for m in reversed(change['messages']):
             rev = m['_revision_number']
-            if m['author']['_account_id'] == ci_id and rev == selected_revision_number:
+            if m['author']['_account_id'] == ci_id and rev == selected_revision_number and not is_filtered_comment(self.main.cfg, m["message"]):
                 commenter = self.main.gerrit.accounts(m['author']['_account_id'])['username']
                 date = m['date'][0:16]
                 msg = urwid.Text(m['message'])

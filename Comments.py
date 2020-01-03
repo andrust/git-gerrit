@@ -1,6 +1,7 @@
 import urwid
 
 from SelectableListItem import SelectableListItem
+from CommentFilter import is_filtered_comment
 
 class Comments(urwid.WidgetWrap):
     def __init__(self, gerrittui, change):
@@ -17,7 +18,7 @@ class Comments(urwid.WidgetWrap):
 
         human_comments = []
         for m in reversed(change['messages']):
-            if m['author']['_account_id'] != ci_id:
+            if m['author']['_account_id'] != ci_id and not is_filtered_comment(self.main.cfg, m["message"]):
                 rev = m['_revision_number']
                 commenter = self.main.gerrit.accounts(m['author']['_account_id'])['username']
                 date = m['date'][0:16]

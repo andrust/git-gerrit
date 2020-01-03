@@ -14,6 +14,7 @@
         "recently closed": "owner:self -age:1w status:closed"
     },
     "diff-window": "tmux-split",
+    "comment_filter": [ "Comments matching any of these regex are filtered" ],
     "palette": {
         "commit_sha": ["h3", "h8", "h0"],
         "comment_header": ["h4", "h8", "h0"],

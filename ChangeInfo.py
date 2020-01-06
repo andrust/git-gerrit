@@ -9,8 +9,20 @@ class ChangeInfo(urwid.WidgetWrap):
         super(ChangeInfo, self).__init__(urwid.Filler(urwid.Text("Loading...")))
         self.refresh(change, selected_revision_number, selected_revision_sha)
 
-    def add_item(self, field, value):
-        self.items.append("%8s: %s" % (field, value))
+    def add_item(self, field, value, color=None):
+        self.items.append((field, value, color))
+        #self.items.append("%8s: %s" % (field, value))
+
+    def update_widget(self):
+        elems = []
+        for f, v, c in self.items:
+            line = ["%8s: " % (f)]
+            if c is not None:
+                line.append((c, v))
+            else:
+                line.append(v)
+            elems.append(urwid.Text(line))
+        self._w = urwid.ListBox(elems)
 
     def refresh(self, change, selected_revision_number, selected_revision_sha):
         self.items = []
@@ -21,7 +33,9 @@ class ChangeInfo(urwid.WidgetWrap):
         self.add_item("Created", Timestamp(change["revisions"][selected_revision_sha]['created']).str)
         self.add_item("Updated", Timestamp(change["updated"]).str)
         self.add_item("Refspec", change["revisions"][selected_revision_sha]["ref"])
-        self.add_item("Patchset", str(selected_revision_number))
+        is_current = selected_revision_sha == change["current_revision"]
+        self.add_item("Patchset", str(selected_revision_number), "current_patchset" if is_current else "old_patchset")
+        self.add_item("Kind", change["revisions"][selected_revision_sha]['kind'].lower().replace('_', ' '))
 
         if change['status'] == 'NEW':
             mergeable = False
@@ -38,4 +52,4 @@ class ChangeInfo(urwid.WidgetWrap):
                     self.add_item("Status", "review needed")
             else:
                 self.add_item("Status", "merge conflict")
-        self._w = urwid.ListBox([urwid.Text(i) for i in self.items])
+        self.update_widget()

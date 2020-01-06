@@ -68,7 +68,9 @@ class GerritTUI(object):
             "status_verified",
             "status_disliked",
             "line",
-            "button"
+            "button",
+            "current_patchset",
+            "old_patchset"
         ]
         default_palette_entry = ["", "", ""]
         theme = {}

@@ -48,6 +48,10 @@
         "status_verified": ["h6", "h8", "h0"],
         "status_disliked": ["h9", "h8", "h0"],
         "line": ["", "h8", "h0"],
-        "button": ["h7", "h8", "h10"]
+        "button": ["h7", "h8", "h10"],
+        "related_merged": ["#0a8", "h8", "h0"],
+        "related_open_current": ["#aaa", "h8", "h0"],
+        "related_open_outdated": ["h3", "h8", "h0"],
+        "related_abandoned": ["h1", "h8", "h0"]
     }
 }

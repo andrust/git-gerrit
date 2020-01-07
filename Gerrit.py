@@ -38,6 +38,18 @@ class Gerrit(object):
         u += '/submit/'
         requests.post(u, auth=self.auth_token, data='{}', headers={"Content-Type": 'application/json'})
 
+    def related(self, change_id, revision):
+        u = self.url
+        u += '/changes/'
+        u += change_id
+        u += '/revisions/'
+        u += revision
+        u += '/related/'
+        ret = json.loads(requests.get(u, auth=self.auth_token).text[4:])
+        with open('/tmp/gdebug', "w") as f:
+            f.write(json.dumps(ret))
+        return ret
+
     def publish(self, change_id, revision):
         u = self.url
         u += '/changes/'

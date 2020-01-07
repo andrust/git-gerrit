@@ -25,6 +25,7 @@ from DLCherryPickAction import DLCherryPickAction
 from DLCheckoutAction import DLCheckoutAction
 from GitResetHeadAction import GitResetHeadAction
 from GitResetPrevAction import GitResetPrevAction
+from RelatedChanges import RelatedChanges
 
 class ChangeView(urwid.WidgetWrap):
     def __init__(self, gerrittui, change_id):
@@ -49,6 +50,7 @@ class ChangeView(urwid.WidgetWrap):
         self.change_info = ChangeInfo(self.main, self.change, self.active_revision_number, self.active_revision_sha)
         self.commit_msg = CommitMsg(self.change, self.active_revision_sha)
         self.ci_jobs = CIJobs(self.main, self.change, self.active_revision_number)
+        self.related = RelatedChanges(self.main, self.change, self.active_revision_sha)
 
         self.setup_layout()
 
@@ -66,7 +68,7 @@ class ChangeView(urwid.WidgetWrap):
 
 
     def setup_layout(self):
-        top_row = urwid.Columns([self.commit_msg, self.change_info, self.reviewers])
+        top_row = urwid.Columns([self.commit_msg, (40, self.change_info), (25, self.reviewers), self.related])
         file_row = urwid.Columns([self.filelist, self.ci_jobs])
         comments_row = urwid.Columns([self.comments, self.jenkins_comments])
 
@@ -112,6 +114,7 @@ class ChangeView(urwid.WidgetWrap):
         self.filelist.refresh(self.change, self.active_revision_sha)
         self.comments.refresh(self.change)
         self.jenkins_comments.refresh(self.change, self.active_revision_number)
+        self.related.refresh(self.change, self.active_revision_sha)
 
         self.reviewers.refresh(self.change_reviewers)
         self.change_info.refresh(self.change, self.active_revision_number, self.active_revision_sha)

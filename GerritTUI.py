@@ -70,7 +70,11 @@ class GerritTUI(object):
             "line",
             "button",
             "current_patchset",
-            "old_patchset"
+            "old_patchset",
+            "related_merged",
+            "related_open_current",
+            "related_open_outdated",
+            "related_abandoned"
         ]
         default_palette_entry = ["", "", ""]
         theme = {}

@@ -32,7 +32,6 @@ class ChangeView(urwid.WidgetWrap):
         self.change_id = change_id
         self.main = gerrittui
         super(ChangeView, self).__init__(urwid.Filler(urwid.Text("Loading...")))
-        self.clear_tempdir()
 
         self.hotkeys = {}
 
@@ -54,14 +53,6 @@ class ChangeView(urwid.WidgetWrap):
 
         self.setup_layout()
 
-    def clear_tempdir(self):
-        tmpdir = self.main.cfg['tmp_dir']
-        for f in os.listdir(tmpdir):
-            fpath = os.path.join(tmpdir, f)
-            if os.path.isdir(fpath):
-                shutil.rmtree(fpath)
-            else:
-                os.unlink(fpath)
 
     def add_hotkey(self, key, action):
         self.hotkeys[key] = action

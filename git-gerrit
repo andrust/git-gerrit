@@ -4,8 +4,24 @@
 import json
 import os
 import sys
+import shutil
 
 from GerritTUI import GerritTUI
+
+def cleanup(tmpdir):
+    for entry in os.listdir(tmpdir):
+        entrypath = os.path.join(tmpdir, entry)
+        if os.path.isdir(entrypath):
+            draftpath = os.path.join(entrypath, "drafts.json")
+            if os.path.exists(draftpath):
+                with open(draftpath, "r") as f:
+                    if len(json.load(f)) == 0:
+                        shutil.rmtree(entrypath)
+            else:
+                shutil.rmtree(entrypath)
+        else:
+            os.unlink(entrypath)
+
 
 if __name__ == '__main__':
     if int(sys.version[0]) > 2:
@@ -30,4 +46,8 @@ if __name__ == '__main__':
         cfg = json.load(f)
 
     GerritTUI(cfg).start()
+
+    cleanup(cfg['tmp_dir'])
+
+
     os.system('clear')

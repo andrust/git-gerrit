@@ -7,6 +7,7 @@ from SelectableListItem import SelectableListItem
 from InputHandler import InputHandler
 from Button import Button
 from Git import Git
+import subprocess
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -79,7 +80,7 @@ class FileList(urwid.WidgetWrap):
 
     def load_drafts(self):
         try:
-            with open(os.path.join(self.main.cfg['tmp_dir'], "drafts.json")) as f:
+            with open(os.path.join(self.main.cfg['tmp_dir'], self.change['id'], "drafts.json")) as f:
                 self.drafts = json.load(f)
         except Exception:
             self.drafts = {}
@@ -146,25 +147,32 @@ class FileList(urwid.WidgetWrap):
 
 
     def diff_open(self, base_fname, gerrit_fname, repo_path_gerrit):
-        cmd = ["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]
+        cmd = ["/bin/vim", "--cmd", """'let g:change_id = "%s"'""" % (self.change["id"]), '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]
 
         if  "diff-window" not in self.main.cfg.keys() or self.main.cfg["diff-window"] == "internal" or 'TMUX' not in os.environ:
-            term = urwid.Terminal(cmd, main_loop=self.main.mainloop, escape_sequence='meta a')
+            term = urwid.Terminal([x.replace("'", "") for x in cmd], main_loop=self.main.mainloop, escape_sequence='meta a')
             term.change_focus(True)
             urwid.connect_signal(term, "closed", self.main.close_popup)
             self.main.open_popup(urwid.LineBox(term), ("relative", 90), ("relative", 90))
         else:
+            tmux_cmd = ' '.join(cmd)
             if self.main.cfg["diff-window"] == "tmux-split":
-                os.system("tmux split-window '%s'" % ( ' '.join(cmd)))
+                subprocess.check_call(['tmux', 'split-window', tmux_cmd])
                 time.sleep(0.1)
-                os.system("tmux resize-pane -Z")
+                subprocess.check_call(['tmux', 'resize-pane', '-Z'])
             elif self.main.cfg["diff-window"] == "tmux-window":
-                os.system("tmux new-window -n %s~%s '" % (self.sha[0:7], os.path.basename(repo_path_gerrit)) + ' '.join(["/bin/vim", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]) + "'")
+                subprocess.check_call(['tmux', 'new-window', '-n', '%s~%s' % (self.sha[0:7], os.path.basename(repo_path_gerrit)), tmux_cmd])
             else:
                 raise(Exception("cfg.diff-window must be one of 'internal', 'tmux-window', 'tmux-split'"))
 
     def diff_prepare(self, sources):
-        tmpdir = self.main.cfg['tmp_dir']
+        tmpdir = os.path.join(self.main.cfg['tmp_dir'], self.change['id'])
+        try:
+            os.makedirs(tmpdir)
+        except OSError as e:
+            if e.errno != os.errno.EEXIST:
+                raise
+
         repo_path_gerrit, repo_path_base = sources
 
         if repo_path_base != repo_path_gerrit:
@@ -197,7 +205,7 @@ class FileList(urwid.WidgetWrap):
 
 
         # Dump Comments
-        self.dump_comments(os.path.join(self.main.cfg['tmp_dir'], "comments.json"))
+        self.dump_comments(os.path.join(tmpdir, "comments.json"))
 
         # Dump diff Properties
         diff_properties = {

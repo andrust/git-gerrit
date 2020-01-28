@@ -80,7 +80,7 @@ class CommentHandler(object):
         return CommentHandler.sign_counter
 
     def __init__(self, tmp_dir):
-        self.__tmp_dir = tmp_dir
+        self.__tmp_dir = os.path.join(tmp_dir, vim.eval("g:change_id"))
         self.__open_comments = []
         self.__diff_properties = {}
 

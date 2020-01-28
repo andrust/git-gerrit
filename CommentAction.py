@@ -20,7 +20,7 @@ class CommentAction(urwid.WidgetWrap):
     def load_drafts(self):
         try:
             self.drafts_left = {}
-            draft_file = os.path.join(self.cview.main.cfg['tmp_dir'], "drafts.json")
+            draft_file = os.path.join(self.cview.main.cfg['tmp_dir'], self.cview.change['id'], "drafts.json")
             with open(draft_file, "r") as f:
                 drafts = json.load(f)
                 comments_for_revision = {}
@@ -54,7 +54,7 @@ class CommentAction(urwid.WidgetWrap):
             return None
 
     def remove_posted_drafts(self):
-        draft_file = os.path.join(self.cview.main.cfg['tmp_dir'], "drafts.json")
+        draft_file = os.path.join(self.cview.main.cfg['tmp_dir'], self.cview.change['id'], "drafts.json")
         with open(draft_file, "w") as f:
             json.dump(self.drafts_left, f)
 

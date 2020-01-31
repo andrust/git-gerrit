@@ -15,7 +15,7 @@ function dependency_check() {
     done
 }
 
-dependency_check urwid requests
+dependency_check urwid requests python-dateutil
 
 if [ "${#MISSING_DEPENDENCIES[@]}" -ne 0 ]; then
     echo "Please install missing dependencies with the following command:"

@@ -8,6 +8,7 @@ from InputHandler import InputHandler
 from Button import Button
 from Git import Git
 import subprocess
+import shlex
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -157,7 +158,9 @@ class FileList(urwid.WidgetWrap):
         else:
             tmux_cmd = ' '.join(cmd)
             if self.main.cfg["diff-window"] == "tmux-split":
-                subprocess.check_call(['tmux', 'split-window', tmux_cmd])
+                win = subprocess.check_output(shlex.split("tmux display-message -p '#I'")).strip()
+                pane = subprocess.check_output(shlex.split("tmux display-message -p '#P'")).strip()
+                subprocess.check_call(['tmux', 'split-window', '-t', "%s.%s" % (win, pane), tmux_cmd])
                 time.sleep(0.1)
                 subprocess.check_call(['tmux', 'resize-pane', '-Z'])
             elif self.main.cfg["diff-window"] == "tmux-window":

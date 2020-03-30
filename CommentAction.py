@@ -55,6 +55,7 @@ class CommentAction(urwid.WidgetWrap):
 
     def remove_posted_drafts(self):
         draft_file = os.path.join(self.cview.main.cfg['tmp_dir'], self.cview.change['id'], "drafts.json")
+        os.makedirs(os.path.join(self.cview.main.cfg['tmp_dir'], self.cview.change['id']))
         with open(draft_file, "w") as f:
             json.dump(self.drafts_left, f)
 

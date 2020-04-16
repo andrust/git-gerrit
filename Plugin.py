@@ -154,14 +154,13 @@ class CommentHandler(object):
         self.__open_comments.append(comment)
 
     def open_split(self, type, content, has_focus=False):
-        vim.command('3new')
-        vim.command('set filetype=%s' % type)
-        vim.current.buffer[:] = content
         width = vim.current.window.width
         longlines = 0
         for l in content:
-            longlines += int(len(l) / width)
-        vim.current.window.height = min(10, max(3, len(content) + longlines))
+            longlines += int(len(l) / (width - 4))
+        vim.command('%inew' % (min(10, max(3, len(content) + longlines))))
+        vim.command('set filetype=%s' % type)
+        vim.current.buffer[:] = content
         bufnum = vim.current.buffer.number
         if not has_focus:
             vim.command('wincmd p')

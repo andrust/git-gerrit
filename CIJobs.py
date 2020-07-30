@@ -159,6 +159,8 @@ def get_job_status(resp, url, ci_user_id, active_patch_number):
 
     jenkins_jobs = {}
     for m in reversed(resp['messages']):
+        if 'author' not in m.keys():
+            continue
         user_id = m['author']['_account_id']
         if user_id == ci_user_id:
             rev_num = m['_revision_number']

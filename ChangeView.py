@@ -17,6 +17,7 @@ from ReviewAction import ReviewAction
 from PublishAction import PublishAction
 from InstantSubmitAction import InstantSubmitAction
 from SubmitAction import SubmitAction
+from RestoreAction import RestoreAction
 from SelectPatchSetAction import SelectPatchSetAction
 from CommentAction import CommentAction
 from ManageReviewersAction import ManageReviewersAction
@@ -71,28 +72,30 @@ class ChangeView(urwid.WidgetWrap):
     def actions(self):
         buttons = []
         if self.change["status"] in ['NEW', 'DRAFT']:
-            buttons.append(ReviewAction(self)),
+            buttons.append(ReviewAction(self))
         if self.change["status"] == 'NEW':
-            buttons.append(SubmitAction(self)),
-            buttons.append(InstantSubmitAction(self)),
+            buttons.append(SubmitAction(self))
+            buttons.append(InstantSubmitAction(self))
         if self.change["status"] == 'DRAFT':
-            buttons.append(PublishAction(self)),
-        buttons.append(SelectPatchSetAction(self)),
-        buttons.append(CommentAction(self)),
+            buttons.append(PublishAction(self))
+        if self.change["status"] == 'ABANDONED':
+            buttons.append(RestoreAction(self))
+        buttons.append(SelectPatchSetAction(self))
+        buttons.append(CommentAction(self))
         if self.change["status"] in ['NEW', 'DRAFT']:
-            buttons.append(ManageReviewersAction(self)),
+            buttons.append(ManageReviewersAction(self))
         if self.change["status"] in ['NEW', 'DRAFT']:
-            buttons.append(AbandonAction(self)),
-        buttons.append(urwid.Divider()),
-        buttons.append(urwid.Divider()),
-        buttons.append(urwid.Divider()),
-        buttons.append(urwid.Text('Download')),
-        buttons.append(urwid.Divider()),
-        buttons.append(DLCherryPickAction(self)),
-        buttons.append(DLCheckoutAction(self)),
-        buttons.append(urwid.Divider()),
-        buttons.append(urwid.Text('Git')),
-        buttons.append(GitResetHeadAction(self)),
+            buttons.append(AbandonAction(self))
+        buttons.append(urwid.Divider())
+        buttons.append(urwid.Divider())
+        buttons.append(urwid.Divider())
+        buttons.append(urwid.Text('Download'))
+        buttons.append(urwid.Divider())
+        buttons.append(DLCherryPickAction(self))
+        buttons.append(DLCheckoutAction(self))
+        buttons.append(urwid.Divider())
+        buttons.append(urwid.Text('Git'))
+        buttons.append(GitResetHeadAction(self))
         buttons.append(GitResetPrevAction(self))
 
 

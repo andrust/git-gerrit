@@ -138,3 +138,10 @@ class Gerrit(object):
         u += '/comments/'
         ret = json.loads(requests.get(u, auth=self.auth_token).text[4:])
         return ret
+
+    def restore(self, change_id):
+        u = self.url
+        u += '/changes/'
+        u += change_id
+        u += '/restore/'
+        requests.post(u, auth=self.auth_token, data='{}', headers={"Content-Type": 'application/json'})

@@ -160,6 +160,8 @@ class FileList(urwid.WidgetWrap):
             if self.main.cfg["diff-window"] == "tmux-split":
                 win = subprocess.check_output(shlex.split("tmux display-message -p '#I'")).strip()
                 pane = subprocess.check_output(shlex.split("tmux display-message -p '#P'")).strip()
+                with open('/tmp/gerrit-debug', 'w') as dbg:
+                    dbg.write('win: %s pane: %s' % (win, pane))
                 subprocess.check_call(['tmux', 'split-window', '-t', "%s.%s" % (win, pane), tmux_cmd])
                 time.sleep(0.1)
                 subprocess.check_call(['tmux', 'resize-pane', '-Z'])

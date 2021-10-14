@@ -24,7 +24,7 @@ class ReviewAction(urwid.WidgetWrap):
             lst.append(urwid.Text(labelname))
             for i in valid_values:
                 default = False
-                if int(i) == int(self.labels[labelname]):
+                if labelname in self.labels.keys() and int(i) == int(self.labels[labelname]):
                     default = True
                 radio = urwid.RadioButton(rgroup, i, state=default, on_state_change=self.set_label, user_data=(labelname, i))
                 lst.append(radio)
@@ -33,12 +33,12 @@ class ReviewAction(urwid.WidgetWrap):
         col = urwid.BoxAdapter((urwid.Columns(content)), 7)
         apply_ = urwid.Padding(urwid.Button("Apply", self.send_labels), 'center', 9)
         layout = urwid.ListBox([col, apply_])
-        hotkeys = { 'ctrl ^' : self.send_labels,
-                    'f2' : self.cr_approved,
-                    'f1' : self.cr_suggested,
+        hotkeys = { 'meta s' : self.send_labels,
+                    '2' : self.cr_approved,
+                    '1' : self.cr_suggested,
                     '0' : self.cr_neutral,
-                    'meta f1' : self.cr_disliked,
-                    'meta f2' : self.cr_denied
+                    'meta 1' : self.cr_disliked,
+                    'meta 2' : self.cr_denied
                   }
         self.cview.main.open_popup(InputHandler(urwid.LineBox(layout), hotkeys), 10, 36)
 

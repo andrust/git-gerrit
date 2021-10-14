@@ -70,7 +70,7 @@ class CommentAction(urwid.WidgetWrap):
         cancel = urwid.Filler(urwid.Padding(urwid.Button("Cancel", self.cview.main.close_popup), 'center', 10))
         buttons = urwid.Columns([post, cancel])
         pile = urwid.Pile([(1, txt), editor_box, (6, urwid.ListBox(self.file_comments_list)), (1, buttons)])
-        self.cview.main.open_popup(InputHandler(urwid.LineBox(pile), {'ctrl ^' : self.post_comment}), 21, 70)
+        self.cview.main.open_popup(InputHandler(urwid.LineBox(pile), {'meta s' : self.post_comment}), 21, 70)
 
     def set_comment(self, w, value):
         self.message = value

@@ -6,4 +6,4 @@ Console UI for Gerrit CodeReview
 
 ## Contribute
 
-[CONTRIBUTING.md](CONTRIBUTING.md)
+Before contribution please read the [CONTRIBUTING.md](CONTRIBUTING.md)

@@ -15,6 +15,11 @@ function dependency_check() {
     done
 }
 
+if [ -n $(which python) ]; then
+    echo "Please install python!"
+    exit 1
+fi
+
 dependency_check urwid requests python-dateutil
 
 if [ "${#MISSING_DEPENDENCIES[@]}" -ne 0 ]; then

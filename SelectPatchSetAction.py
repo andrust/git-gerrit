@@ -12,7 +12,7 @@ class SelectPatchSetAction(urwid.WidgetWrap):
     def open_popup(self, w=None):
         button_grp = []
         buttons = []
-        for sha, rev in self.cview.change['revisions'].iteritems():
+        for sha, rev in self.cview.change['revisions'].items():
             default = self.cview.active_revision_sha == sha
             num = rev['_number']
             num_text = "%i (%s)" % (num, rev['kind'].lower().replace('_', ' '))

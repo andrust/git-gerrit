@@ -112,9 +112,9 @@ class CommentHandler(object):
         vim.command('set splitbelow')
 
     def load_drafts(self, draft_json):
-        for file_path_in_repo, comments in draft_json.iteritems():
+        for file_path_in_repo, comments in draft_json.items():
             for comment in comments:
-                if 'line' not in comment.iterkeys():
+                if 'line' not in comment.keys():
                     comment['line'] = 1
 
                 if self.__diff_properties['after']['repopath'] == file_path_in_repo and self.__diff_properties['after']['patch_set'] == str(comment['patch_set']):
@@ -129,9 +129,9 @@ class CommentHandler(object):
                 commented_descriptor.add_draft(comment['message'], comment['line'])
 
     def load_comments(self, comments_json):
-        for file_path_in_repo, comments in comments_json.iteritems():
+        for file_path_in_repo, comments in comments_json.items():
             for comment in comments:
-                if 'line' not in comment.iterkeys():
+                if 'line' not in comment.keys():
                     comment['line'] = 1
 
                 if self.__diff_properties['after']['repopath'] == file_path_in_repo and self.__diff_properties['after']['patch_set'] == str(comment['patch_set']):

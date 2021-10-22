@@ -24,7 +24,7 @@ class CommentAction(urwid.WidgetWrap):
             with open(draft_file, "r") as f:
                 drafts = json.load(f)
                 comments_for_revision = {}
-                for path, comments in drafts.iteritems():
+                for path, comments in drafts.items():
                     comments_for_path = []
                     drafts_left_for_path = []
                     for c in comments:

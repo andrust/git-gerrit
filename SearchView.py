@@ -21,7 +21,7 @@ class SearchView(urwid.WidgetWrap):
     def get_favorites(self):
         if "predefined_search" in self.main.cfg.keys():
             favorites = []
-            for title, query in self.main.cfg['predefined_search'].iteritems():
+            for title, query in self.main.cfg['predefined_search'].items():
                 favorites.append((len(title) + 4, urwid.Filler(urwid.Padding(urwid.Button(title, self.do_search, query.split())))))
             return urwid.Columns(favorites)
         else:

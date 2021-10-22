@@ -32,7 +32,7 @@ class FileList(urwid.WidgetWrap):
         self.base_select = Button("base       ", "button", self.diff_against_popup)
         diff_against_selector = urwid.Filler(urwid.Columns([(14, txt), (15, self.base_select)]))
         flist = []
-        for f, desc in sorted(change['revisions'][self.sha]['files'].iteritems()):
+        for f, desc in sorted(change['revisions'][self.sha]['files'].items()):
             old_source = f
             fname = f
             state = "M"
@@ -193,7 +193,7 @@ class FileList(urwid.WidgetWrap):
         if self.diff_against == "base":
             base_sha = self.sha + '~1'
         else:
-            for bsha, desc in self.change["revisions"].iteritems():
+            for bsha, desc in self.change["revisions"].items():
                 if desc['_number'] == self.diff_against:
                     base_sha = bsha
                     break

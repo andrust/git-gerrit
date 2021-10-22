@@ -8,8 +8,8 @@ class InputHandler(urwid.WidgetWrap):
         super(InputHandler, self).__init__(widget)
 
     def keypress(self, size, key):
-        if key in self.callbacks.iterkeys():
+        if key in self.callbacks.keys():
             self.callbacks[key]()
         else:
-            #print "key:'%s' size:'%s'" % (key, str(size))
+            #print(f"key:'{key}' size:'{str(size)}'")
             return super(InputHandler, self).keypress(size, key)

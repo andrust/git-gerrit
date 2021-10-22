@@ -31,4 +31,4 @@ if [ "${#MISSING_DEPENDENCIES[@]}" -ne 0 ]; then
     exit 1
 fi
 
-python -B ./git-gerrit
+python3 -B ./git-gerrit

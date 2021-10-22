@@ -18,7 +18,7 @@ class ReviewAction(urwid.WidgetWrap):
                 break
         content = []
         self.radiomap = {}
-        for labelname, valid_values in self.cview.change['permitted_labels'].iteritems():
+        for labelname, valid_values in self.cview.change['permitted_labels'].items():
             lst = []
             rgroup = []
             lst.append(urwid.Text(labelname))

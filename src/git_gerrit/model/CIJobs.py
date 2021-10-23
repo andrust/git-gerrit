@@ -13,7 +13,7 @@ import os
 from threading import Thread
 import time
 
-from SelectableListItem import SelectableListItem
+from git_gerrit.model.SelectableListItem import SelectableListItem
 
 class Jenkins(object):
     def __init__(self, jenkins_url, user, token, colored=True):

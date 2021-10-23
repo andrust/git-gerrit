@@ -1,6 +1,6 @@
 import urwid
 
-from Button import Button
+from git_gerrit.model.Button import Button
 
 class SubmitAction(urwid.WidgetWrap):
     def __init__(self, chageview):

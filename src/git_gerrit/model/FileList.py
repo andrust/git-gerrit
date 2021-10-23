@@ -3,10 +3,10 @@ import os
 import json
 import time
 
-from SelectableListItem import SelectableListItem
-from InputHandler import InputHandler
-from Button import Button
-from Git import Git
+from git_gerrit.model.SelectableListItem import SelectableListItem
+from git_gerrit.model.InputHandler import InputHandler
+from git_gerrit.model.Button import Button
+from git_gerrit.model.Git import Git
 import subprocess
 import shlex
 

@@ -1,6 +1,6 @@
 import urwid
 
-from Timestamp import Timestamp
+from git_gerrit.model.Timestamp import Timestamp
 
 class ChangeInfo(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, selected_revision_number, selected_revision_sha):

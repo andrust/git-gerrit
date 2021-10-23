@@ -1,8 +1,8 @@
 import urwid
 
-from Git import Git
-from Button import Button
-import ErrorPopup
+from git_gerrit.model.Git import Git
+from git_gerrit.model.Button import Button
+from git_gerrit.model.ErrorPopup import display
 
 class DLCheckoutAction(urwid.WidgetWrap):
     def __init__(self, chageview):
@@ -14,6 +14,6 @@ class DLCheckoutAction(urwid.WidgetWrap):
         try:
             git.fetch(self.cview.change['revisions'][self.cview.active_revision_sha]['ref'])
             git.checkout(self.cview.active_revision_sha)
-            ErrorPopup.display(self.cview.main, "Checkout successful")
+            display(self.cview.main, "Checkout successful")
         except Exception as e:
-            ErrorPopup.display(self.cview.main, str(e))
+            display(self.cview.main, str(e))

@@ -1,8 +1,8 @@
 import urwid
 
-from SelectableListItem import SelectableListItem
-from CommentFilter import is_filtered_comment
-from Timestamp import Timestamp
+from git_gerrit.model.SelectableListItem import SelectableListItem
+from git_gerrit.model.CommentFilter import is_filtered_comment
+from git_gerrit.model.Timestamp import Timestamp
 
 class Comments(urwid.WidgetWrap):
     def __init__(self, gerrittui, change):

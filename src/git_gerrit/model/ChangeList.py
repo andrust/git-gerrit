@@ -1,7 +1,7 @@
 import urwid
 
-from SelectableListItem import SelectableListItem
-from Timestamp import Timestamp
+from git_gerrit.model.SelectableListItem import SelectableListItem
+from git_gerrit.model.Timestamp import Timestamp
 
 class ChangeList(urwid.ListBox):
     def __init__(self, gerrittui, query, options=[]):

@@ -1,7 +1,7 @@
 import urwid
 
-from Button import Button
-from InputHandler import InputHandler
+from git_gerrit.model.Button import Button
+from git_gerrit.model.InputHandler import InputHandler
 
 class SelectPatchSetAction(urwid.WidgetWrap):
     def __init__(self, chageview):

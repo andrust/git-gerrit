@@ -1,5 +1,5 @@
 import urwid
-from SelectableListItem import SelectableListItem
+from git_gerrit.model.SelectableListItem import SelectableListItem
 
 class RelatedChanges(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, selected_revision_sha):

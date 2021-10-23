@@ -6,7 +6,7 @@ import os
 import sys
 import shutil
 
-from GerritTUI import GerritTUI
+from git_gerrit.model.GerritTUI import GerritTUI
 
 def cleanup(tmpdir):
     for entry in os.listdir(tmpdir):

@@ -1,11 +1,11 @@
 import urwid
 import os
 
-from Gerrit import Gerrit
-from SelectableListItem import SelectableListItem
-from HomeView import HomeView
-from ChangeView import ChangeView
-from SearchView import SearchView
+from git_gerrit.model.Gerrit import Gerrit
+from git_gerrit.model.SelectableListItem import SelectableListItem
+from git_gerrit.view.HomeView import HomeView
+from git_gerrit.view.ChangeView import ChangeView
+from git_gerrit.view.SearchView import SearchView
 
 class GerritTUI(object):
     def __init__(self, cfg):

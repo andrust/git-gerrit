@@ -24,7 +24,7 @@ def cleanup(tmpdir):
             os.unlink(entrypath)
 
 
-if __name__ == '__main__':
+def main():
     if "LANG" not in os.environ:
         print("LANG environment variable not setted properly!")
         sys.exit()
@@ -47,3 +47,7 @@ if __name__ == '__main__':
     cleanup(cfg['tmp_dir'])
 
     os.system('clear')
+
+
+if __name__ == '__main__':
+    main()

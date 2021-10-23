@@ -10,8 +10,10 @@ RUN apt-get update && \
     && apt-get clean
 
 RUN pip install \
-        urwid \
+        build \
+        python-dateutil \
         requests \
-        python-dateutil
+        twine \
+        urwid
 
 CMD ["/bin/bash"]

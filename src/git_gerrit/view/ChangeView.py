@@ -4,29 +4,29 @@ import urwid
 import os
 import shutil
 
-from FileList import FileList
-from Comments import Comments
-from JenkinsComments import JenkinsComments
-from Reviewers import Reviewers
-from ChangeInfo import ChangeInfo
-from CommitMsg import CommitMsg
-from InputHandler import InputHandler
+from git_gerrit.model.FileList import FileList
+from git_gerrit.model.Comments import Comments
+from git_gerrit.model.JenkinsComments import JenkinsComments
+from git_gerrit.model.Reviewers import Reviewers
+from git_gerrit.model.ChangeInfo import ChangeInfo
+from git_gerrit.model.CommitMsg import CommitMsg
+from git_gerrit.model.InputHandler import InputHandler
 
-from AbandonAction import AbandonAction
-from ReviewAction import ReviewAction
-from PublishAction import PublishAction
-from InstantSubmitAction import InstantSubmitAction
-from SubmitAction import SubmitAction
-from RestoreAction import RestoreAction
-from SelectPatchSetAction import SelectPatchSetAction
-from CommentAction import CommentAction
-from ManageReviewersAction import ManageReviewersAction
-from CIJobs import CIJobs
-from DLCherryPickAction import DLCherryPickAction
-from DLCheckoutAction import DLCheckoutAction
-from GitResetHeadAction import GitResetHeadAction
-from GitResetPrevAction import GitResetPrevAction
-from RelatedChanges import RelatedChanges
+from git_gerrit.action.AbandonAction import AbandonAction
+from git_gerrit.action.ReviewAction import ReviewAction
+from git_gerrit.action.PublishAction import PublishAction
+from git_gerrit.action.InstantSubmitAction import InstantSubmitAction
+from git_gerrit.action.SubmitAction import SubmitAction
+from git_gerrit.action.RestoreAction import RestoreAction
+from git_gerrit.action.SelectPatchSetAction import SelectPatchSetAction
+from git_gerrit.action.CommentAction import CommentAction
+from git_gerrit.action.ManageReviewersAction import ManageReviewersAction
+from git_gerrit.model.CIJobs import CIJobs
+from git_gerrit.action.DLCherryPickAction import DLCherryPickAction
+from git_gerrit.action.DLCheckoutAction import DLCheckoutAction
+from git_gerrit.action.GitResetHeadAction import GitResetHeadAction
+from git_gerrit.action.GitResetPrevAction import GitResetPrevAction
+from git_gerrit.model.RelatedChanges import RelatedChanges
 
 class ChangeView(urwid.WidgetWrap):
     def __init__(self, gerrittui, change_id):

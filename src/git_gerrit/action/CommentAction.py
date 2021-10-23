@@ -4,8 +4,8 @@ import urwid
 import os
 import json
 
-from Button import Button
-from InputHandler import InputHandler
+from git_gerrit.model.Button import Button
+from git_gerrit.model.InputHandler import InputHandler
 
 class CommentAction(urwid.WidgetWrap):
     def __init__(self, chageview):

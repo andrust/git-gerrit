@@ -2,7 +2,7 @@
 
 import urwid
 
-from ChangeList import ChangeList
+from git_gerrit.model.ChangeList import ChangeList
 
 class HomeView(urwid.WidgetWrap):
     def __init__(self, gerrittui):

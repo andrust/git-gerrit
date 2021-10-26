@@ -4,10 +4,11 @@ from git_gerrit.model.Git import Git
 from git_gerrit.model.Button import Button
 from git_gerrit.model.ErrorPopup import display
 
+
 class GitResetPrevAction(urwid.WidgetWrap):
     def __init__(self, chageview):
         self.cview = chageview
-        super(GitResetPrevAction, self).__init__(Button("Reset HEAD~1", "button", self.reset))
+        super().__init__(Button("Reset HEAD~1", "button", self.reset))
 
     def reset(self, w):
         git = Git()

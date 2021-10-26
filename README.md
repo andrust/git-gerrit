@@ -1,3 +1,4 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/andrust/git-gerrit/Static-analysis?label=Static-analysis%20status)
 # git-gerrit
 
 Console UI for Gerrit CodeReview.

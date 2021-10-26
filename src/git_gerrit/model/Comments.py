@@ -1,15 +1,15 @@
 import urwid
 
-from git_gerrit.model.SelectableListItem import SelectableListItem
+# from git_gerrit.model.SelectableListItem import SelectableListItem
 from git_gerrit.model.CommentFilter import is_filtered_comment
 from git_gerrit.model.Timestamp import Timestamp
+
 
 class Comments(urwid.WidgetWrap):
     def __init__(self, gerrittui, change):
         self.main = gerrittui
-        super(Comments, self).__init__(urwid.Filler(urwid.Text("Loading...")))
+        super().__init__(urwid.Filler(urwid.Text("Loading...")))
         self.refresh(change)
-
 
     def refresh(self, change):
         if 'ci' in self.main.cfg:
@@ -24,6 +24,6 @@ class Comments(urwid.WidgetWrap):
                 commenter = self.main.gerrit.accounts(m['author']['_account_id'])['username']
                 date = Timestamp(m['date']).str
                 msg = urwid.Text(m['message'])
-                header = urwid.SelectableIcon(("comment_header", "%13s #%2i %8s:" % (date, rev, commenter)))
+                header = urwid.SelectableIcon(("comment_header", f"{date} #{rev} {commenter}:"))
                 human_comments.append(urwid.Pile([header, msg, urwid.Divider()]))
         self._w = urwid.ListBox(urwid.SimpleFocusListWalker(human_comments))

@@ -1,0 +1,28 @@
+[MASTER]
+disable=
+    C0103, # invalid-name
+    C0114, # missing-module-docstring
+    C0115, # missing-class-docstring
+    C0116, # missing-function-docstring
+    C0301, # line-too-long
+# TODO: fix these
+    W0613, # unused-argument
+    W0703, # broad-except
+    R1705, # no-else-return
+    R1720, # no-else-raise
+    R0201, # no-self-use
+    R0801, # duplicate-code
+    R0902, # too-many-instance-attributes
+    R0911, # too-many-return-statements
+    R0912, # too-many-branches
+    R0913, # too-many-arguments
+    R0914, # too-many-local-variables
+# TODO: fix these are more serious
+    W0102, # dangerous-default-value
+    W0212, # protected-access
+    W0707, # raise-missing-from
+    R1702, # too-many-nested-blocks
+
+[MISCELLANEOUS]
+    # List of note tags to take in consideration, separated by a comma.
+    notes=FIXME,XXX

@@ -1,5 +1,6 @@
 import urwid
 
+
 def display(gerrittui, text):
     lines = text.split('\n')
     m = 0

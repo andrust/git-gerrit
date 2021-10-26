@@ -1,8 +1,9 @@
 import urwid
 
+
 class CommitMsg(urwid.WidgetWrap):
     def __init__(self, change, selected_revision_sha):
-        super(CommitMsg, self).__init__(urwid.Filler(urwid.Text("Loading...")))
+        super().__init__(urwid.Filler(urwid.Text("Loading...")))
         self.refresh(change, selected_revision_sha)
 
     def refresh(self, change, selected_revision_sha):

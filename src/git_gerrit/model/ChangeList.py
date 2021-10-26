@@ -3,11 +3,12 @@ import urwid
 from git_gerrit.model.SelectableListItem import SelectableListItem
 from git_gerrit.model.Timestamp import Timestamp
 
+
 class ChangeList(urwid.ListBox):
-    def __init__(self, gerrittui, query, options=[]):
+    def __init__(self, gerrittui, query, options=None):
         self.main = gerrittui
         self.q = query
-        self.o = options
+        self.o = [] if options is None else options
         if 'SUBMITTABLE' not in self.o:
             self.o.append('SUBMITTABLE')
         if 'LABELS' not in self.o:
@@ -16,13 +17,13 @@ class ChangeList(urwid.ListBox):
             self.o.append('CURRENT_REVISION')
         body = urwid.SimpleFocusListWalker([urwid.Text("Loading")])
         urwid.connect_signal(body, "modified", self.set_focus_colors, body)
-        super(ChangeList, self).__init__(body)
+        super().__init__(body)
         self.refresh()
 
     def set_focus_colors(self, w):
         focused = w.focus
         for i, listitem in enumerate(w):
-            for field, opt in listitem.contents:
+            for field, _ in listitem.contents:
                 m = field.attr_map[None]
                 if i == focused and self.focus:
                     if not m.endswith(".focus"):
@@ -60,12 +61,12 @@ class ChangeList(urwid.ListBox):
         }
         labels = []
         for label in c["labels"]:
-            for score in score_map.keys():
-                if score in label.keys():
-                    labels.append((label[score]["_account_id"], score_map[score][label]))
+            for score, value in score_map.items():
+                if score in label:
+                    labels.append((label[score]["_account_id"], value[label]))
                     break
 
-        return urwid.AttrMap(urwid.Text())
+        return urwid.AttrMap(urwid.Text('Score'), 'Score')
 
     def get_update_time(self, c):
         return Timestamp(c['revisions'][c['current_revision']]['created'])

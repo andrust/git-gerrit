@@ -4,6 +4,7 @@ import urwid
 
 from git_gerrit.model.ChangeList import ChangeList
 
+
 class HomeView(urwid.WidgetWrap):
     def __init__(self, gerrittui):
         self.outgoing = ChangeList(gerrittui, ['owner:self', 'status:open'])
@@ -15,8 +16,8 @@ class HomeView(urwid.WidgetWrap):
         self.incoming = ChangeList(gerrittui, 'reviewer:self status:open -owner:self AND ( label:Code-Review=0,self OR ( label:Code-Review=-2,user=self AND -reviewedby:self ) )'.split())
         self.incoming_box = urwid.LineBox(self.incoming, 'Incoming New (' + str(self.incoming.size()) + ')', 'left', tlcorner='*', tline=' ', lline='', trcorner='', blcorner='', rline='', bline='', brcorner='')
 
-        pile = urwid.Pile([('weight', self.outgoing.size() + 1, self.outgoing_box), (1, urwid.Filler(urwid.Divider(u'·'))), ('weight', self.incoming.size() + 1, self.incoming_box), (1, urwid.Filler(urwid.Divider(u'·'))), ('weight', self.incoming_done.size() + 1, self.incoming_done_box)])
-        super(HomeView, self).__init__(pile)
+        pile = urwid.Pile([('weight', self.outgoing.size() + 1, self.outgoing_box), (1, urwid.Filler(urwid.Divider('·'))), ('weight', self.incoming.size() + 1, self.incoming_box), (1, urwid.Filler(urwid.Divider('·'))), ('weight', self.incoming_done.size() + 1, self.incoming_done_box)])
+        super().__init__(pile)
 
     def refresh(self):
         self.incoming.refresh()

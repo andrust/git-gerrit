@@ -5,6 +5,7 @@ import urwid
 from git_gerrit.model.Button import Button
 from git_gerrit.model.InputHandler import InputHandler
 
+
 class ManageReviewersAction(urwid.WidgetWrap):
     def __init__(self, chageview):
         self.cview = chageview
@@ -13,7 +14,7 @@ class ManageReviewersAction(urwid.WidgetWrap):
         self.reviewers_proposed = urwid.SimpleListWalker([])
         self.editor = None
         self.cview.add_hotkey("I", self.open_popup)
-        super(ManageReviewersAction, self).__init__(Button("Set Reviewers", "button", self.open_popup))
+        super().__init__(Button("Set Reviewers", "button", self.open_popup))
 
     def apply_reviewers(self, w=None):
         for r in self.reviewers_to_remove:
@@ -50,7 +51,7 @@ class ManageReviewersAction(urwid.WidgetWrap):
             removable_items.append(urwid.CheckBox(name, on_state_change=self.set_reviewers_to_remove))
 
         self.editor = urwid.Edit('', edit_text='', multiline=False)
-        editor_box = InputHandler(urwid.LineBox(urwid.Filler(self.editor), tlcorner=u'·', tline=u'·', lline=u'·', trcorner=u'·', blcorner=u'·', rline=u'·', bline=u'·', brcorner=u'·'),  {'enter' : self.set_reviewers_to_add})
+        editor_box = InputHandler(urwid.LineBox(urwid.Filler(self.editor), tlcorner='·', tline='·', lline='·', trcorner='·', blcorner='·', rline='·', bline='·', brcorner='·'), {'enter': self.set_reviewers_to_add})
 
         apply_button = urwid.Filler(urwid.Padding(urwid.Button("Apply", self.apply_reviewers), 'center', 10))
         add_button = urwid.Filler(urwid.Padding(urwid.Button("Add", self.set_reviewers_to_add), 'center', 10))
@@ -60,4 +61,4 @@ class ManageReviewersAction(urwid.WidgetWrap):
         reviewers_column = urwid.Columns([urwid.ListBox(removable_items), urwid.ListBox(self.reviewers_proposed)])
 
         pile = urwid.Pile([(3, add_row), reviewers_column])
-        self.cview.main.open_popup(InputHandler(urwid.LineBox(pile), {'ctrl ^' : self.apply_reviewers}), 15, 60)
+        self.cview.main.open_popup(InputHandler(urwid.LineBox(pile), {'ctrl ^': self.apply_reviewers}), 15, 60)

@@ -3,10 +3,11 @@ from git_gerrit.model.Git import Git
 from git_gerrit.model.Button import Button
 from git_gerrit.model.ErrorPopup import display
 
+
 class DLCherryPickAction(urwid.WidgetWrap):
     def __init__(self, chageview):
         self.cview = chageview
-        super(DLCherryPickAction, self).__init__(Button("Cherry-Pick", "button", self.cherry_pick))
+        super().__init__(Button("Cherry-Pick", "button", self.cherry_pick))
 
     def cherry_pick(self, w):
         git = Git()

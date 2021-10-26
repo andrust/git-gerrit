@@ -1,8 +1,10 @@
 import json
 import os
+# pylint: disable=import-error
 import vim
 
-class FileDescriptor(object):
+
+class FileDescriptor:
     def __init__(self, buffer_path):
         self.__comments = []
         self.__drafts = []
@@ -23,12 +25,12 @@ class FileDescriptor(object):
     def add_comment(self, message, row, author, date):
         c = Comment(message, row, author, date, CommentHandler.COMMENT_SIGN, self.__buffer)
         self.__comments.append(c)
-        vim.command('sign place %d line=%d name=%s file=%s' % (c.id, row, CommentHandler.COMMENT_SIGN, self.__buffer))
+        vim.command(f'sign place {c.id} line={row} name={CommentHandler.COMMENT_SIGN} file={self.__buffer}')
 
     def add_draft(self, message, row):
         c = Comment(message, row, "", "", CommentHandler.DRAFT_SIGN, self.__buffer)
         self.__drafts.append(c)
-        vim.command('sign place %d line=%d name=%s file=%s' % (c.id, row, CommentHandler.DRAFT_SIGN, self.__buffer))
+        vim.command(f'sign place {c.id} line={row} name={CommentHandler.DRAFT_SIGN} file={self.__buffer}')
         return c
 
     def delete_draft(self, in_buffer):
@@ -44,9 +46,10 @@ class FileDescriptor(object):
             for c in self.__drafts:
                 if c.row == to_remove.row:
                     break
-            vim.command('sign unplace %d' % (to_remove.id))
+            vim.command(f'sign unplace {to_remove.id}')
 
-class Comment(object):
+
+class Comment:
     def __init__(self, message, row, author, date, comment_type, commented_buffer):
         self.message = message
         self.row = row
@@ -58,18 +61,18 @@ class Comment(object):
         self.id = CommentHandler.sign_id()
 
     def comment_content(self):
-        content = ["%s on %s wrote:" % (self.author, self.date), ""]
+        content = [f"{self.author} on {self.date} wrote:", ""]
         return content + self.message.splitlines()
 
     def draft_content(self):
         return self.message.splitlines()
 
     def draft_serialize(self, patchset):
-        content = { "line": self.row, "message": self.message, "patch_set": patchset}
+        content = {"line": self.row, "message": self.message, "patch_set": patchset}
         return content
 
 
-class CommentHandler(object):
+class CommentHandler:
     COMMENT_SIGN = 'Comment'
     DRAFT_SIGN = 'Draft'
     sign_counter = 0
@@ -85,20 +88,19 @@ class CommentHandler(object):
         self.__diff_properties = {}
 
         self.setup_vim()
-        with open(os.path.join(self.__tmp_dir, 'diff_properties.json'), 'r') as f:
+        with open(os.path.join(self.__tmp_dir, 'diff_properties.json'), 'r', encoding='utf-8') as f:
             self.__diff_properties = json.load(f)
 
         self.__before = FileDescriptor(self.__diff_properties['before']['fname'])
         self.__after = FileDescriptor(self.__diff_properties['after']['fname'])
 
-        with open(os.path.join(self.__tmp_dir, 'comments.json'), 'r') as f:
+        with open(os.path.join(self.__tmp_dir, 'comments.json'), 'r', encoding='utf-8') as f:
             self.load_comments(json.load(f))
         try:
-            with open(os.path.join(self.__tmp_dir, 'drafts.json'), 'r') as f:
+            with open(os.path.join(self.__tmp_dir, 'drafts.json'), 'r', encoding='utf-8') as f:
                 self.load_drafts(json.load(f))
         except Exception:
             pass
-
 
     def buffer_exists(self, filename):
         for buf in vim.buffers:
@@ -107,8 +109,8 @@ class CommentHandler(object):
         return False
 
     def setup_vim(self):
-        vim.command('sign define %s text=C' % CommentHandler.COMMENT_SIGN)
-        vim.command('sign define %s text=D' % CommentHandler.DRAFT_SIGN)
+        vim.command(f'sign define {CommentHandler.COMMENT_SIGN} text=C')
+        vim.command(f'sign define {CommentHandler.DRAFT_SIGN} text=D')
         vim.command('set splitbelow')
 
     def load_drafts(self, draft_json):
@@ -119,10 +121,10 @@ class CommentHandler(object):
 
                 if self.__diff_properties['after']['repopath'] == file_path_in_repo and self.__diff_properties['after']['patch_set'] == str(comment['patch_set']):
                     commented_descriptor = self.__after
-                    commented_buffer = self.__diff_properties['after']['fname']
+                    self.commented_buffer = self.__diff_properties['after']['fname']
                 elif self.__diff_properties['before']['repopath'] == file_path_in_repo and self.__diff_properties['before']['patch_set'] == str(comment['patch_set']):
                     commented_descriptor = self.__before
-                    commented_buffer = self.__diff_properties['before']['fname']
+                    self.commented_buffer = self.__diff_properties['before']['fname']
                 else:
                     continue
 
@@ -136,10 +138,10 @@ class CommentHandler(object):
 
                 if self.__diff_properties['after']['repopath'] == file_path_in_repo and self.__diff_properties['after']['patch_set'] == str(comment['patch_set']):
                     commented_descriptor = self.__after
-                    commented_buffer = self.__diff_properties['after']['fname']
+                    self.commented_buffer = self.__diff_properties['after']['fname']
                 elif self.__diff_properties['before']['repopath'] == file_path_in_repo and self.__diff_properties['before']['patch_set'] == str(comment['patch_set']):
                     commented_descriptor = self.__before
-                    commented_buffer = self.__diff_properties['before']['fname']
+                    self.commented_buffer = self.__diff_properties['before']['fname']
                 else:
                     continue
 
@@ -153,13 +155,13 @@ class CommentHandler(object):
         comment.visible_in_buffer = self.open_split(CommentHandler.DRAFT_SIGN, comment.draft_content(), has_focus=has_focus)
         self.__open_comments.append(comment)
 
-    def open_split(self, type, content, has_focus=False):
+    def open_split(self, file_type, content, has_focus=False):
         width = vim.current.window.width
         longlines = 0
-        for l in content:
-            longlines += int(len(l) / (width - 4))
-        vim.command('%inew' % (min(10, max(3, len(content) + longlines))))
-        vim.command('set filetype=%s' % type)
+        for line in content:
+            longlines += int(len(line) / (width - 4))
+        vim.command(f'{min(10, max(3, len(content) + longlines))}new')
+        vim.command(f'set filetype={file_type}')
         vim.current.buffer[:] = content
         bufnum = vim.current.buffer.number
         if not has_focus:
@@ -169,12 +171,12 @@ class CommentHandler(object):
     def close_splits(self):
         for c in self.__open_comments:
             try:
-                vim.command('bdelete! %i' % (c.visible_in_buffer))
+                vim.command(f'bdelete! {c.visible_in_buffer}')
                 c.visible_in_buffer = None
             except vim.error:
                 pass
-        self.__open_splits = []
-        self.__last_draft = None
+        # self.__open_splits = []
+        # self.__last_draft = None
         self.__open_comments = []
 
     def check_position_for_buffer(self, buffer, row):
@@ -186,14 +188,12 @@ class CommentHandler(object):
             if c.row == row:
                 self.open_draft(c)
 
-
-
     def check_position(self, file_path, row):
         if not file_path:
             return
 
         if len(self.__open_comments) != 0:
-            if file_path == self.__before.buffer or file_path ==  self.__after.buffer:
+            if file_path in (self.__before.buffer, self.__after.buffer):
                 self.close_splits()
 
         if file_path == self.__before.buffer:
@@ -211,7 +211,6 @@ class CommentHandler(object):
         self.open_draft(comment, has_focus=True)
         vim.command('call SetMapping()')
 
-
     def save_draft(self):
         bufnr = vim.current.buffer.number
 
@@ -224,12 +223,12 @@ class CommentHandler(object):
 
         drafts = None
         try:
-            with open(os.path.join(self.__tmp_dir, 'drafts.json'), 'r') as f:
+            with open(os.path.join(self.__tmp_dir, 'drafts.json'), 'r', encoding='utf-8') as f:
                 drafts = json.load(f)
         except Exception:
             drafts = {}
 
-        if len(self.__before.drafts) or len(self.__after.drafts):
+        if len(self.__before.drafts) > 0 or len(self.__after.drafts) > 0:
             drafts[self.__diff_properties['before']['repopath']] = []
             drafts[self.__diff_properties['after']['repopath']] = []
         else:
@@ -242,9 +241,8 @@ class CommentHandler(object):
         for d in self.__after.drafts:
             drafts[self.__diff_properties['after']['repopath']].append(d.draft_serialize(self.__diff_properties['after']['patch_set']))
 
-        with open(os.path.join(self.__tmp_dir, 'drafts.json'), 'w') as f:
+        with open(os.path.join(self.__tmp_dir, 'drafts.json'), 'w', encoding='utf-8') as f:
             json.dump(drafts, f)
-
 
     def discard_draft(self):
         bufnr = vim.current.buffer.number
@@ -285,9 +283,10 @@ class CommentHandler(object):
         if self.__before.buffer == buffer_path:
             self.prev_comment_in_buffer(self.__before, row)
 
+
 def get_config():
     rcpath = os.path.join(os.path.expanduser('~'), '.gerritrc.json')
-    with open(rcpath, 'r') as f:
+    with open(rcpath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
@@ -295,27 +294,34 @@ def get_config():
 cfg = get_config()
 command_handler = CommentHandler(cfg['tmp_dir'])
 
+
 def check_current_pos():
-    row, col = vim.current.window.cursor
+    row, _ = vim.current.window.cursor
     command_handler.check_position(vim.current.buffer.name, row)
+
 
 def propose_draft():
     row, col = vim.current.window.cursor
     command_handler.propose_draft(vim.current.buffer.name, row, col)
 
+
 def save_draft():
     command_handler.save_draft()
+
 
 def discard_draft():
     command_handler.discard_draft()
 
+
 def dispose():
     command_handler.dispose()
 
+
 def next_comment():
-    row, col = vim.current.window.cursor
+    row, _ = vim.current.window.cursor
     command_handler.next_comment(vim.current.buffer.name, row)
 
+
 def prev_comment():
-    row, col = vim.current.window.cursor
+    row, _ = vim.current.window.cursor
     command_handler.prev_comment(vim.current.buffer.name, row)

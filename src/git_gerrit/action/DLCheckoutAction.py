@@ -4,10 +4,11 @@ from git_gerrit.model.Git import Git
 from git_gerrit.model.Button import Button
 from git_gerrit.model.ErrorPopup import display
 
+
 class DLCheckoutAction(urwid.WidgetWrap):
     def __init__(self, chageview):
         self.cview = chageview
-        super(DLCheckoutAction, self).__init__(Button("Checkout", "button", self.checkout))
+        super().__init__(Button("Checkout", "button", self.checkout))
 
     def checkout(self, w):
         git = Git()

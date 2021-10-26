@@ -1,5 +1,5 @@
-import urwid
 import os
+import urwid
 
 from git_gerrit.model.Gerrit import Gerrit
 from git_gerrit.model.SelectableListItem import SelectableListItem
@@ -7,7 +7,8 @@ from git_gerrit.view.HomeView import HomeView
 from git_gerrit.view.ChangeView import ChangeView
 from git_gerrit.view.SearchView import SearchView
 
-class GerritTUI(object):
+
+class GerritTUI:
     def __init__(self, cfg):
 
         urwid.set_encoding('utf8')
@@ -86,10 +87,10 @@ class GerritTUI(object):
             palette += self.add_palette_entry(entry, theme[entry] if entry in theme.keys() else default_palette_entry)
         return palette
 
-    def add_palette_entry(self, id, entry):
+    def add_palette_entry(self, identity, entry):
         return [
-            (id, '', '', '', entry[0], entry[1]),
-            (id + ".focus", '', '', '', entry[0], entry[2]),
+            (identity, '', '', '', entry[0], entry[1]),
+            (identity + ".focus", '', '', '', entry[0], entry[2]),
         ]
 
     @property

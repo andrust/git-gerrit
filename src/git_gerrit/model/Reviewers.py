@@ -1,8 +1,9 @@
 import urwid
 
+
 class Reviewers(urwid.WidgetWrap):
     def __init__(self, reviewers, label_types):
-        super(Reviewers, self).__init__(urwid.Filler(urwid.Text("Loading...")))
+        super().__init__(urwid.Filler(urwid.Text("Loading...")))
         self.label_types = label_types
         self.refresh(reviewers)
 
@@ -18,9 +19,10 @@ class Reviewers(urwid.WidgetWrap):
             return "good_label"
         elif a == '+2':
             return "good_label"
+        return "neutral_label"
 
     def get_title_row(self):
-        title_row = ["%10s" % ('id',)]
+        title_row = ["id"]
         for la in self.label_types:
             title_row.append(self.get_short_name(la))
 
@@ -32,8 +34,7 @@ class Reviewers(urwid.WidgetWrap):
             short_name += word.upper()[0]
         if len(short_name) > 3:
             short_name = short_name[:3]
-        return "%3s" % (short_name)
-
+        return f"{short_name}"
 
     def get_reviewer_row(self, r):
         vote = []
@@ -44,7 +45,6 @@ class Reviewers(urwid.WidgetWrap):
                 vote.append("0")
         return vote
 
-
     def refresh(self, reviewers):
         votes = {}
 
@@ -54,10 +54,10 @@ class Reviewers(urwid.WidgetWrap):
             if 'approvals' in r.keys():
                 votes[r['username']] = self.get_reviewer_row(r)
 
-        for u in votes.keys():
-            row_content = [("reviewer_name", "%10s" % u)]
-            for v in votes[u]:
-                row_content += [" ", (self.get_color(v), "%3s" % (v))]
+        for u, values in votes.items():
+            row_content = [("reviewer_name", f"{u}"[0:10])]
+            for v in values:
+                row_content += [" ", (self.get_color(v), f"{v}"[0:3])]
             rows.append(row_content)
 
         self._w = urwid.ListBox([urwid.Text(i) for i in rows])

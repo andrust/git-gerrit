@@ -1,10 +1,11 @@
 import urwid
 from git_gerrit.model.SelectableListItem import SelectableListItem
 
+
 class RelatedChanges(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, selected_revision_sha):
         self.main = gerrittui
-        super(RelatedChanges, self).__init__(urwid.Filler(urwid.Text("Loading...")))
+        super().__init__(urwid.Filler(urwid.Text("Loading...")))
         self.refresh(change, selected_revision_sha)
 
     def refresh(self, change, selected_revision_sha):
@@ -27,4 +28,3 @@ class RelatedChanges(urwid.WidgetWrap):
             contents.append(urwid.AttrMap(line, color))
 
         self._w = urwid.Filler(urwid.ListBox(contents), height=('relative', 100), valign='top', bottom=1)
-

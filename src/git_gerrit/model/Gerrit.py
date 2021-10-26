@@ -2,7 +2,8 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
-class Gerrit(object):
+
+class Gerrit:
     def __init__(self, url, user, token):
         self.auth_token = HTTPBasicAuth(user, token)
         self.url = url
@@ -12,9 +13,9 @@ class Gerrit(object):
         u = self.url
         u += '/changes/?q='
         u += '+'.join(q)
-        if len(o):
+        if len(o) > 0:
             u += '&'
-            u += '&'.join(['o=%s' % (i) for i in o])
+            u += '&'.join([f'o={i}' for i in o])
         ret = json.loads(requests.get(u, auth=self.auth_token).text[4:])
         return ret
 
@@ -46,7 +47,7 @@ class Gerrit(object):
         u += revision
         u += '/related/'
         ret = json.loads(requests.get(u, auth=self.auth_token).text[4:])
-        with open('/tmp/gdebug', "w") as f:
+        with open('/tmp/gdebug', "w", encoding='utf-8') as f:
             f.write(json.dumps(ret))
         return ret
 
@@ -88,12 +89,12 @@ class Gerrit(object):
         u = self.url
         u += '/changes/' + change_id
         u += '/?'
-        u += '&'.join(['o=%s' % (i) for i in options])
+        u += '&'.join([f'o={i}' for i in options])
         ret = json.loads(requests.get(u, auth=self.auth_token).text[4:])
         return ret
 
     def accounts(self, account_id='self'):
-        if account_id in self.account_cache.keys():
+        if account_id in self.account_cache:
             return self.account_cache[account_id]
 
         u = self.url

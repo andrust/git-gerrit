@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import urwid
-import os
-import shutil
 
 from git_gerrit.model.FileList import FileList
 from git_gerrit.model.Comments import Comments
@@ -28,11 +26,12 @@ from git_gerrit.action.GitResetHeadAction import GitResetHeadAction
 from git_gerrit.action.GitResetPrevAction import GitResetPrevAction
 from git_gerrit.model.RelatedChanges import RelatedChanges
 
+
 class ChangeView(urwid.WidgetWrap):
     def __init__(self, gerrittui, change_id):
         self.change_id = change_id
         self.main = gerrittui
-        super(ChangeView, self).__init__(urwid.Filler(urwid.Text("Loading...")))
+        super().__init__(urwid.Filler(urwid.Text("Loading...")))
 
         self.hotkeys = {}
 
@@ -54,10 +53,8 @@ class ChangeView(urwid.WidgetWrap):
 
         self.setup_layout()
 
-
     def add_hotkey(self, key, action):
         self.hotkeys[key] = action
-
 
     def setup_layout(self):
         top_row = urwid.Columns([self.commit_msg, (40, self.change_info), (25, self.reviewers), self.related])
@@ -97,7 +94,6 @@ class ChangeView(urwid.WidgetWrap):
         buttons.append(urwid.Text('Git'))
         buttons.append(GitResetHeadAction(self))
         buttons.append(GitResetPrevAction(self))
-
 
         return urwid.Filler(urwid.ListBox(buttons), height=len(buttons), valign='middle', min_height=len(buttons))
 

@@ -2,10 +2,11 @@ import urwid
 
 from git_gerrit.model.Button import Button
 
+
 class InstantSubmitAction(urwid.WidgetWrap):
     def __init__(self, chageview):
         self.cview = chageview
-        super(InstantSubmitAction, self).__init__(Button("Instant Submit", "button", self.instant_submit))
+        super().__init__(Button("Instant Submit", "button", self.instant_submit))
 
     def instant_submit(self, w):
         labels = {"Verified": 1, "Code-Review": 2}

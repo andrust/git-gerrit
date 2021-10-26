@@ -2,21 +2,22 @@ import urwid
 
 from git_gerrit.model.Timestamp import Timestamp
 
+
 class ChangeInfo(urwid.WidgetWrap):
     def __init__(self, gerrittui, change, selected_revision_number, selected_revision_sha):
         self.main = gerrittui
         self.items = []
-        super(ChangeInfo, self).__init__(urwid.Filler(urwid.Text("Loading...")))
+        super().__init__(urwid.Filler(urwid.Text("Loading...")))
         self.refresh(change, selected_revision_number, selected_revision_sha)
 
     def add_item(self, field, value, color=None):
         self.items.append((field, value, color))
-        #self.items.append("%8s: %s" % (field, value))
+        # self.items.append("%8s: %s" % (field, value))
 
     def update_widget(self):
         elems = []
         for f, v, c in self.items:
-            line = ["%8s: " % (f)]
+            line = [f"{f}: "[0:8]]
             if c is not None:
                 line.append((c, v))
             else:

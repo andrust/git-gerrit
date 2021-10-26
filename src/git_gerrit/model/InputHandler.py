@@ -1,15 +1,18 @@
 import urwid
 
-from git_gerrit.model.Button import Button
+# from git_gerrit.model.Button import Button
+
 
 class InputHandler(urwid.WidgetWrap):
     def __init__(self, widget, callbacks):
         self.callbacks = callbacks
-        super(InputHandler, self).__init__(widget)
+        super().__init__(widget)
 
     def keypress(self, size, key):
         if key in self.callbacks.keys():
             self.callbacks[key]()
+            # TODO: should we call a return here pylint inconsistent-return-statements
+            return super().keypress(size, key)
         else:
-            #print(f"key:'{key}' size:'{str(size)}'")
-            return super(InputHandler, self).keypress(size, key)
+            # print(f"key:'{key}' size:'{str(size)}'")
+            return super().keypress(size, key)

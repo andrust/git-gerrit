@@ -1,8 +1,8 @@
 import urwid
 
-from git_gerrit.model.Git import Git
-from git_gerrit.model.Button import Button
-from git_gerrit.model.ErrorPopup import display
+from gerrit_tui.model.Git import Git
+from gerrit_tui.model.Button import Button
+from gerrit_tui.model.ErrorPopup import display
 
 
 class DLCheckoutAction(urwid.WidgetWrap):

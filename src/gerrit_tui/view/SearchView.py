@@ -2,8 +2,8 @@
 
 import urwid
 
-from git_gerrit.model.ChangeList import ChangeList
-from git_gerrit.model.InputHandler import InputHandler
+from gerrit_tui.model.ChangeList import ChangeList
+from gerrit_tui.model.InputHandler import InputHandler
 
 
 class SearchView(urwid.WidgetWrap):

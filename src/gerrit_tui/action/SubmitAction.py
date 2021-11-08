@@ -1,6 +1,6 @@
 import urwid
 
-from git_gerrit.model.Button import Button
+from gerrit_tui.model.Button import Button
 
 
 class SubmitAction(urwid.WidgetWrap):

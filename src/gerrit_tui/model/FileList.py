@@ -6,10 +6,10 @@ import shlex
 import time
 import urwid
 
-from git_gerrit.model.SelectableListItem import SelectableListItem
-from git_gerrit.model.InputHandler import InputHandler
-from git_gerrit.model.Button import Button
-from git_gerrit.model.Git import Git
+from gerrit_tui.model.SelectableListItem import SelectableListItem
+from gerrit_tui.model.InputHandler import InputHandler
+from gerrit_tui.model.Button import Button
+from gerrit_tui.model.Git import Git
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 

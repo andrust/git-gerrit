@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+GIT_REPO="${GIT_REPO:-$(git -C $(dirname ${BASH_SOURCE[0]}) rev-parse --show-toplevel)}"
+export PYTHONPATH="${GIT_REPO}/src"
 export LANG='en_US.UTF-8'
 MISSING_DEPENDENCIES=()
 
@@ -31,4 +33,4 @@ if [ "${#MISSING_DEPENDENCIES[@]}" -ne 0 ]; then
     exit 1
 fi
 
-PYTHONPATH=./src python3 -B ./src/git_gerrit/__main__.py
+python3 -B -m gerrit_tui

@@ -13,7 +13,7 @@ from requests.auth import HTTPBasicAuth
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 # pylint: disable=wrong-import-position
-from git_gerrit.model.SelectableListItem import SelectableListItem # noqa E402
+from gerrit_tui.model.SelectableListItem import SelectableListItem # noqa E402
 
 
 class Jenkins:

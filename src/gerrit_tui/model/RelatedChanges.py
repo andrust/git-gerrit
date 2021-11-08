@@ -1,5 +1,5 @@
 import urwid
-from git_gerrit.model.SelectableListItem import SelectableListItem
+from gerrit_tui.model.SelectableListItem import SelectableListItem
 
 
 class RelatedChanges(urwid.WidgetWrap):

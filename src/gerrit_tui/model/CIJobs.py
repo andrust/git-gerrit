@@ -35,7 +35,7 @@ class Jenkins:
         log = requests.get(u, auth=self.auth_token, verify=False).content
         if self.colored:
             log = '<br/>\n'.join(log.splitlines())
-            with subprocess.Popen(shlex.split("elinks -dump -dump-color-mode 1 -dump-width 150 -dump-charset utf8 -no-references"), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT) as p:
+            with subprocess.Popen(shlex.split("elinks -dump -dump-color-mode 1 -dump-width 150 -dump-charset utf8 -no-references"), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8') as p:
                 log = p.communicate(input=log)[0]
         return log
 

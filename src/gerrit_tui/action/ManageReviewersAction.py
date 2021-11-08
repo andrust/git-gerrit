@@ -2,8 +2,8 @@
 
 import urwid
 
-from git_gerrit.model.Button import Button
-from git_gerrit.model.InputHandler import InputHandler
+from gerrit_tui.model.Button import Button
+from gerrit_tui.model.InputHandler import InputHandler
 
 
 class ManageReviewersAction(urwid.WidgetWrap):

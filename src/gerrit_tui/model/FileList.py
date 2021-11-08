@@ -150,7 +150,7 @@ class FileList(urwid.WidgetWrap):
             f.write(json.dumps(self.comments))
 
     def diff_open(self, base_fname, gerrit_fname, repo_path_gerrit):
-        cmd = ["/bin/vim", "--cmd", f"""'let g:change_id = "{self.change["id"]}"'""", '-u', os.path.join(CURRENT_PATH, 'diffrc'), '-d', base_fname, gerrit_fname]
+        cmd = ["/bin/vim", "--cmd", f"""'let g:change_id = "{self.change["id"]}"'""", '-u', os.path.join(CURRENT_PATH, '..', 'util', 'diffrc'), '-d', base_fname, gerrit_fname]
 
         if "diff-window" not in self.main.cfg.keys() or self.main.cfg["diff-window"] == "internal" or 'TMUX' not in os.environ:
             term = urwid.Terminal([x.replace("'", "") for x in cmd], main_loop=self.main.mainloop, escape_sequence='meta a')

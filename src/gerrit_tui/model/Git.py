@@ -19,7 +19,7 @@ class Git:
             return False
 
     def cmd(self, cmd, output=[]):
-        with subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE) as p:
+        with subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8') as p:
             out, err = p.communicate()
             output[:] = [out, err]
             if p.returncode != 0:

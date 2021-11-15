@@ -150,7 +150,8 @@ class FileList(urwid.WidgetWrap):
             f.write(json.dumps(self.comments))
 
     def diff_open(self, base_fname, gerrit_fname, repo_path_gerrit):
-        cmd = ["/bin/vim", "--cmd", f"""'let g:change_id = "{self.change["id"]}"'""", '-u', os.path.join(CURRENT_PATH, '..', 'util', 'diffrc'), '-d', base_fname, gerrit_fname]
+        vimcmd = self.main.cfg['vim-binary'] if 'vim-binary' in self.main.cfg.keys() else '/usr/bin/vim'
+        cmd = [vimcmd, "--cmd", f"""'let g:change_id = "{self.change["id"]}"'""", '-u', os.path.join(CURRENT_PATH, '..', 'util', 'diffrc'), '-d', base_fname, gerrit_fname]
 
         if "diff-window" not in self.main.cfg.keys() or self.main.cfg["diff-window"] == "internal" or 'TMUX' not in os.environ:
             term = urwid.Terminal([x.replace("'", "") for x in cmd], main_loop=self.main.mainloop, escape_sequence='meta a')
@@ -160,15 +161,15 @@ class FileList(urwid.WidgetWrap):
         else:
             tmux_cmd = ' '.join(cmd)
             if self.main.cfg["diff-window"] == "tmux-split":
-                win = subprocess.check_output(shlex.split("tmux display-message -p '#I'")).strip()
-                pane = subprocess.check_output(shlex.split("tmux display-message -p '#P'")).strip()
+                win = subprocess.check_output(shlex.split("tmux display-message -p '#I'"), encoding='utf-8').strip()
+                pane = subprocess.check_output(shlex.split("tmux display-message -p '#P'"), encoding='utf-8').strip()
                 with open('/tmp/gerrit-debug', 'w', encoding='utf-8') as dbg:
                     dbg.write(f'win: {win} pane: {pane}')
                 subprocess.check_call(['tmux', 'split-window', '-t', f"{win}.{pane}", tmux_cmd])
                 time.sleep(0.1)
-                subprocess.check_call(['tmux', 'resize-pane', '-Z'])
+                subprocess.check_call(['tmux', 'resize-pane', '-Z'], encoding='utf-8')
             elif self.main.cfg["diff-window"] == "tmux-window":
-                subprocess.check_call(['tmux', 'new-window', '-n', f'{self.sha[0:7]}~{os.path.basename(repo_path_gerrit)}', tmux_cmd])
+                subprocess.check_call(['tmux', 'new-window', '-n', f'{self.sha[0:7]}~{os.path.basename(repo_path_gerrit)}', tmux_cmd], encoding='utf-8')
             else:
                 raise Exception("cfg.diff-window must be one of 'internal', 'tmux-window', 'tmux-split'")
 

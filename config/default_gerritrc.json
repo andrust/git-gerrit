@@ -14,6 +14,7 @@
         "recently closed": "owner:self -age:1w status:closed"
     },
     "diff-window": "tmux-split",
+    "vim-binary": "/usr/bin/vim",
     "comment_filter": [ "Comments matching any of these regex are filtered" ],
     "palette": {
         "commit_sha": ["h3", "h8", "h0"],

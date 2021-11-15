@@ -1,3 +1,5 @@
+" vi: ft=vim
+"
 set nocompatible
 set mouse=
 
@@ -44,7 +46,7 @@ highlight DiffChange term=bold         ctermbg=black        ctermfg=white    cte
 highlight DiffDelete term=none         ctermbg=darkred      ctermfg=white    cterm=none
 
 " Plugin
-if !has("python")
+if !has("python3")
     echo "vim has to be compiled with +python to run this"
     finish
 endif
@@ -57,7 +59,7 @@ endif
 let g:plugin_plugin_loaded = 1
 let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 
-python << EOF
+python3 << EOF
 import sys
 import vim
 sys.path.insert(0, vim.eval('s:plugin_root_dir'))
@@ -65,42 +67,42 @@ import Plugin
 EOF
 
 function! CheckCurrentPos()
-    python Plugin.check_current_pos()
+    python3 Plugin.check_current_pos()
 endfunction
 
 autocmd CursorMoved * call CheckCurrentPos()
 
 function! ProposeDraft()
-    python Plugin.propose_draft()
+    python3 Plugin.propose_draft()
 endfunction 
 command! -nargs=0 ProposeDraft call ProposeDraft()
 nnoremap c :ProposeDraft<cr>
 
 function! SaveDraft()
-    python Plugin.save_draft()
+    python3 Plugin.save_draft()
 endfunction
 command! -nargs=0 SaveDraft call SaveDraft()
 nnoremap s :SaveDraft<cr>
 
 function! DiscardDraft()
-    python Plugin.discard_draft()
+    python3 Plugin.discard_draft()
 endfunction
 command! -nargs=0 DiscardDraft call DiscardDraft()
 nnoremap D :DiscardDraft<cr>
 
 function! Dispose()
-    python Plugin.dispose()
+    python3 Plugin.dispose()
 endfunction
 autocmd VimLeavePre * call Dispose()
 
 function! NextComment()
-    python Plugin.next_comment()
+    python3 Plugin.next_comment()
 endfunction
 command! -nargs=0 NextComment call NextComment()
 nnoremap <c-n> :NextComment<cr>
 
 function! PrevComment()
-    python Plugin.prev_comment()
+    python3 Plugin.prev_comment()
 endfunction
 command! -nargs=0 PrevComment call PrevComment()
 nnoremap <c-p> :PrevComment<cr>

@@ -25,12 +25,12 @@ class FileDescriptor:
     def add_comment(self, message, row, author, date):
         c = Comment(message, row, author, date, CommentHandler.COMMENT_SIGN, self.__buffer)
         self.__comments.append(c)
-        vim.command(f'sign place {c.id} line={row} name={CommentHandler.COMMENT_SIGN} file={self.__buffer}')
+        vim.command(f"sign place {c.id} line={row} name={CommentHandler.COMMENT_SIGN} file={self.__buffer}")
 
     def add_draft(self, message, row):
         c = Comment(message, row, "", "", CommentHandler.DRAFT_SIGN, self.__buffer)
         self.__drafts.append(c)
-        vim.command(f'sign place {c.id} line={row} name={CommentHandler.DRAFT_SIGN} file={self.__buffer}')
+        vim.command(f"sign place {c.id} line={row} name={CommentHandler.DRAFT_SIGN} file={self.__buffer}")
         return c
 
     def delete_draft(self, in_buffer):
@@ -46,7 +46,7 @@ class FileDescriptor:
             for c in self.__drafts:
                 if c.row == to_remove.row:
                     break
-            vim.command(f'sign unplace {to_remove.id}')
+            vim.command(f"sign unplace {to_remove.id}")
 
 
 class Comment:
@@ -109,8 +109,8 @@ class CommentHandler:
         return False
 
     def setup_vim(self):
-        vim.command(f'sign define {CommentHandler.COMMENT_SIGN} text=C')
-        vim.command(f'sign define {CommentHandler.DRAFT_SIGN} text=D')
+        vim.command(f"sign define {CommentHandler.COMMENT_SIGN} text=C")
+        vim.command(f"sign define {CommentHandler.DRAFT_SIGN} text=D")
         vim.command('set splitbelow')
 
     def load_drafts(self, draft_json):
@@ -160,8 +160,8 @@ class CommentHandler:
         longlines = 0
         for line in content:
             longlines += int(len(line) / (width - 4))
-        vim.command(f'{min(10, max(3, len(content) + longlines))}new')
-        vim.command(f'set filetype={file_type}')
+        vim.command(f"{min(10, max(3, len(content) + longlines))}new")
+        vim.command(f"set filetype={file_type}")
         vim.current.buffer[:] = content
         bufnum = vim.current.buffer.number
         if not has_focus:
@@ -171,7 +171,7 @@ class CommentHandler:
     def close_splits(self):
         for c in self.__open_comments:
             try:
-                vim.command(f'bdelete! {c.visible_in_buffer}')
+                vim.command(f"bdelete! {c.visible_in_buffer}")
                 c.visible_in_buffer = None
             except vim.error:
                 pass

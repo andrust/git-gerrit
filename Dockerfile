@@ -6,6 +6,7 @@ RUN apt-get update && \
         git \
         python3 \
         python3-pip \
+        python3.8-venv \
         vim \
     && apt-get clean
 

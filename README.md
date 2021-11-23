@@ -1,4 +1,5 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/andrust/git-gerrit/Static-analysis?label=Static-analysis%20status)
+![PyPI](https://img.shields.io/pypi/v/gerrit-tui)
 # git-gerrit
 
 Console UI for Gerrit CodeReview.
